@@ -1,11 +1,64 @@
 {{> header}}
-
-  <div class="jumbotron mt-5">
-    <div class="container">
-      <h1 class="display-3">Cuisiner c'est bon pour la santé</h1>
-
-      <img class="img-fluid" src="https://cdn.pixabay.com/photo/2016/04/05/20/29/kitchen-1310290_960_720.jpg">
+  <div class="jumbotron jumbotron-fluid" style="background-image: url('https://www.ecologic-france.com/images/medias/images/13934/_thumb3/ecologic-02.jpg');">
+    <div class="container text-center" >
+      <h1 class="display-4" style="color: rgb(78, 29, 29);">Une Action Pour la Nature c'est un Point pour la vie</h1>
     </div>
   </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-5">
+        <ul class="list-group">
+          <li><h5 class="dropdown-header">WorldWide Ranking Action</h5></li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            jetez une ordure
+            <span class="badge bg-primary rounded-pill">25pts</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            triez sa poubelle
+            <span class="badge bg-primary rounded-pill">20pts</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            plantez un arbre 
+            <span class="badge bg-primary rounded-pill">10pts</span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-5">
+        <div class="row">
+          <div class="col">
+            <div id="list-example" class="list-group">
+              <a class="list-group-item list-group-item-action" href="#list-item-1">1er </a>
+              <a class="list-group-item list-group-item-action" href="#list-item-2">2e </a>
+              <a class="list-group-item list-group-item-action" href="#list-item-3">3e</a>
+              <a class="list-group-item list-group-item-action" href="#list-item-4">4e</a>
+            </div>
+          </div>
+          <div class="col">
+            <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+              <p id="list-item-1">Nom Joueur 1er Nombre de Points Description</p>
+              <p id="list-item-2">Nom Joueur 2e Nombre de Points Description</p>
+              <p id="list-item-3">Nom Joueur 3e Nombre de Points Description</p>
+              <p id="list-item-4">Nom Joueur 4e Nombre de Points Description</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <li><button class="dropdown-item" type="button">Action</button></li>
+          <li><button class="dropdown-item" type="button">Another action</button></li>
+          <li><button class="dropdown-item" type="button">Something else here</button></li>
+        </ul>
+      </div>      
+    </div>
+  </div>
+  <br>
 
-{{> footer}}
+  <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br><br></div>
+  
+  {{> footer}}
