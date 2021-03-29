@@ -17,6 +17,17 @@ app.engine('html', mustache());
 app.set('view engine', 'html');
 app.set('views', './views');
 
+app.use(cookieSession({
+  name: 'session',
+  secret: randomstring
+}));
+function is_authentificated(req, res, next) {
+  if(req.session.id != undefined) {
+    return next();
+  }
+  res.status(401).send('Authentication required');
+}
+
 app.get('/', (req, res) => {
     res.render('index');
   });
@@ -25,7 +36,45 @@ app.get('/register', (req,res) => {
   res.render('register');
 })
 
+app.post('/register',(req,res) => {
+  req.session.id = model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password,req.body.avatar, req.body.description);
+ 
+  if(req.session.id == -1){
+    res.locals.error = true;
+    res.render('register');
+  }
+  else{
+    req.session.username = req.body.username;
+    res.redirect('/profil');}
+  
+})
+
 app.get('/login',(req,res) =>{
   res.render('login');
 });
+
+app.post('/login',(req,res) =>{
+  console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
+  if(req.body.username !=null && req.body.password != null && model.login(req.body.username,req.body.password) != -1){  
+    req.session = model.login(req.body.username,req.body.password);
+    req.session.username = req.body.username;
+    console.log(req.session.id)
+    res.render('profil', model.read(req.session.id));
+  }else{ res.redirect('/login');}
+
+});
+
+app.get('/profil',(req,res) =>{
+  console.log(model.read(req.session.id).id)
+  res.render('profil',model.read(req.session.id).id)
+})
+
+
+app.get('/logout',(req,res)=>{
+  req.session.id = null;
+  res.redirect('/')
+})
+
+
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
+
