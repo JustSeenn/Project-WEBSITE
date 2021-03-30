@@ -1,64 +1,50 @@
 {{> header}}
-  <div class="jumbotron jumbotron-fluid" style="background-image: url('https://www.ecologic-france.com/images/medias/images/13934/_thumb3/ecologic-02.jpg');">
+  <div id = "background" class="jumbotron jumbotron-fluid" style="background-image: url('https://www.ecologic-france.com/images/medias/images/13934/_thumb3/ecologic-02.jpg');opacity: 0.8;background-repeat: no-repeat;background-attachment: relative;background-size: cover;">
     <div class="container text-center" >
-      <h1 class="display-4" style="color: rgb(78, 29, 29);">Une Action Pour la Nature c'est un Point pour la vie</h1>
+      <h1 class="display-4" style="color: rgb(5, 0, 0);">Une Action Pour la Nature c'est un Point pour la vie</h1>
     </div>
   </div>
+  <br><br><br><br>
   <div class="container">
     <div class="row">
-      <div class="col-5">
+      <div class="col">
         <ul class="list-group">
-          <li><h5 class="dropdown-header">WorldWide Ranking Action</h5></li>
+          <h5 class="dropdown-header">WorldWide Ranking Action</h5>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             jetez une ordure
-            <span class="badge bg-primary rounded-pill">25pts</span>
+            <span class="badge badge-light">25pts</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             triez sa poubelle
-            <span class="badge bg-primary rounded-pill">20pts</span>
+            <span class="badge badge-light">20pts</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             plantez un arbre 
-            <span class="badge bg-primary rounded-pill">10pts</span>
+            <span class="badge badge-light">10pts</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            prendre transport en commun 
+            <span class="badge badge-light">5pts</span>
           </li>
         </ul>
       </div>
-      <div class="col-5">
-        <div class="row">
-          <div class="col">
-            <div id="list-example" class="list-group">
-              <a class="list-group-item list-group-item-action" href="#list-item-1">1er </a>
-              <a class="list-group-item list-group-item-action" href="#list-item-2">2e </a>
-              <a class="list-group-item list-group-item-action" href="#list-item-3">3e</a>
-              <a class="list-group-item list-group-item-action" href="#list-item-4">4e</a>
-            </div>
-          </div>
-          <div class="col">
-            <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-              <p id="list-item-1">Nom Joueur 1er Nombre de Points Description</p>
-              <p id="list-item-2">Nom Joueur 2e Nombre de Points Description</p>
-              <p id="list-item-3">Nom Joueur 3e Nombre de Points Description</p>
-              <p id="list-item-4">Nom Joueur 4e Nombre de Points Description</p>
-            </div>
-          </div>
+      <div class="col ">
+        <div class="list-group list-group-flush justify-content-end">
+          <h5 class="dropdown-header">WorldWide Ranking Player</h5>
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#list-item-1">1- JustSeen <span class="badge badge-success">10200 pts</span></a>
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#list-item-2">2- Ditrix2 <span class="badge badge-success">9800 pts</span></a>
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#list-item-3">3- Biggie <span class="badge badge-success">8500 pts</span></a>
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#list-item-4">4- Yvans_30 <span class="badge badge-success">7600 pts</span></a>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-          <li><button class="dropdown-item" type="button">Action</button></li>
-          <li><button class="dropdown-item" type="button">Another action</button></li>
-          <li><button class="dropdown-item" type="button">Something else here</button></li>
-        </ul>
-      </div>      
-    </div>
+    <br><br><br><br>
+    <div class="container text-center">
+      <a href="#" class="btn btn-success" role="button" data-bs-toggle="button">Action Répertorié</a>
+    </div>  
   </div>
-  <br>
+  <br><br><br><br><br>
 
-  <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br><br></div>
+  <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br></div>
   
   {{> footer}}
