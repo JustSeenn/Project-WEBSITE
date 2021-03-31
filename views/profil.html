@@ -647,14 +647,14 @@ TODO Possibilité de modifier les données // Deuxième affichage pour profil d'
         <div class="media clearfix">
           <div class="media-left pr30">
             <a href="#">
-              <img class="be6sR" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="...">
+              <img class="be6sR" src="{{avatar}}" alt="...">
             </a>
           </div>                      
           <div class="media-body va-m">
-            <h2 class="media-heading">Michael Halls
+            <h2 class="media-heading">{{firstname}} {{lastname}}
               <small> - Profile</small>
             </h2>
-            <p class="lead">Description à changer</p>
+            <p class="lead">{{description}}</p>
           </div>
         </div>
     </div>
@@ -678,7 +678,7 @@ TODO Possibilité de modifier les données // Deuxième affichage pour profil d'
                       <span class="fa fa-trophy text-warning"></span>
                     </td>
                     <td>Points</td>
-                    <td>105 000</td>
+                    <td>{{points}}</td>
                   </tr>
                   <tr>
                     <td>
@@ -686,7 +686,7 @@ TODO Possibilité de modifier les données // Deuxième affichage pour profil d'
                     </td>
                     <td>Membre depuis</td>
                     <td>
-                      105 jours</td>
+                      {{date}} jours</td>
                   </tr>
                   <tr>
                     <td>
@@ -694,7 +694,7 @@ TODO Possibilité de modifier les données // Deuxième affichage pour profil d'
                     </td>
                     <td>Nombre d'amis</td>
                     <td>
-                      4</td>
+                      {{count_friends}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -710,47 +710,13 @@ TODO Possibilité de modifier les données // Deuxième affichage pour profil d'
             </div>
             <div class="pre-scrollable">
                 <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
+                    <div class="card-header">{{friend_name[0].username}}</div>
                     <div class="card-body text-center">
                     <h5 class="card-title">106 000 points</h5>
                     <a href="/" class="btn btn-light">Profil</a>
                     </div>
                 </div>
-                <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
-                    <div class="card-body text-center">
-                    <h5 class="card-title">106 000 points</h5>
-                    <a href="/" class="btn btn-light">Profil</a>
-                    </div>
-                </div>
-                <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
-                    <div class="card-body text-center">
-                    <h5 class="card-title">106 000 points</h5>
-                    <a href="/" class="btn btn-light">Profil</a>
-                    </div>
-                </div>
-                <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
-                    <div class="card-body text-center">
-                    <h5 class="card-title">106 000 points</h5>
-                    <a href="/" class="btn btn-light">Profil</a>
-                    </div>
-                </div>
-                <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
-                    <div class="card-body text-center">
-                    <h5 class="card-title">106 000 points</h5>
-                    <a href="/" class="btn btn-light">Profil</a>
-                    </div>
-                </div>
-                <div class="card text-white bg-dark mb-3 text-center">
-                    <div class="card-header">Yvan Charles KIEGAIN DJOKO</div>
-                    <div class="card-body text-center">
-                    <h5 class="card-title">106 000 points</h5>
-                    <a href="/" class="btn btn-light">Profil</a>
-                    </div>
-                </div>
+                
                 
             </div>
           </div>

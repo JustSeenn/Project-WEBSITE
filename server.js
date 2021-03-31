@@ -28,6 +28,16 @@ function is_authentificated(req, res, next) {
   res.status(401).send('Authentication required');
 }
 
+function can_see (req,res,next) {
+  if(req.session.username != undefined) {
+    res.locals.authenticated = true;
+    res.locals.name  = req.session.name;
+    
+  }
+  return next();
+}
+app.use(can_see);
+
 app.get('/', (req, res) => {
     res.render('index');
   });
@@ -54,24 +64,24 @@ app.get('/login',(req,res) =>{
 });
 
 app.post('/login',(req,res) =>{
-  console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
+  // console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
   if(req.body.username !=null && req.body.password != null && model.login(req.body.username,req.body.password) != -1){  
     req.session = model.login(req.body.username,req.body.password);
     req.session.username = req.body.username;
-    console.log(req.session.id)
-    res.render('profil', model.read(req.session.id));
+    console.log(model.read(req.session.id))
+    res.locals.authenticated = true;
+    res.render('profil', model.read(req.session.id)[0],model.read(req.session.id)[[1]]);
   }else{ res.redirect('/login');}
 
 });
 
 app.get('/profil',(req,res) =>{
-  console.log(model.read(req.session.id).id)
-  res.render('profil',model.read(req.session.id).id)
+  res.render('profil',model.read(req.session.id)[0])
 })
 
 
 app.get('/logout',(req,res)=>{
-  req.session.id = null;
+  req.session.username = null;
   res.redirect('/')
 })
 
