@@ -24,15 +24,35 @@ exports.login = (username,password) => {
 exports.read = (id) => {
     
     if(id != -1) {
-      var found = db.prepare('SELECT * FROM user WHERE id = ?').all(id);
-      var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id)
-      for(var i=0;i<friend.length;i++){
-        found[0].friend_name[i] = db.prepare('SELECT username FROM user WHERE id = ?').all(friend[i].id) //TODO 
-      }
-      
-      console.log(friend, found[0].friend_name,found[0].friend_name)
+      var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
+      var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
+
+      var tab = [];
+      for(var i=0 ; i < friend.length ; i++){
+         tab[i] = db.prepare('SELECT username FROM user WHERE id = ?').get(friend[i].id) //TODO 
+         tab[i].points = db.prepare('SELECT points FROM user WHERE id = ?').get(friend[i].id).points
+         tab[i].id = friend[i].id
+      }   
+      console.log(tab)
+      found.friends_name = tab;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
-      found[0].count_friends = count_friends.count; 
+      found.count_friends = count_friends.count; 
+      
+      return found;
+    } else {
+      return null;
+    }
+  };
+
+  exports.read_friend = (id) => {
+    console.log(id)
+    if(id != -1) {
+      var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
+
+      
+      var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
+      found.count_friends = count_friends.count; 
+      
       return found;
     } else {
       return null;

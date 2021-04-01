@@ -68,17 +68,19 @@ app.post('/login',(req,res) =>{
   if(req.body.username !=null && req.body.password != null && model.login(req.body.username,req.body.password) != -1){  
     req.session = model.login(req.body.username,req.body.password);
     req.session.username = req.body.username;
-    console.log(model.read(req.session.id))
     res.locals.authenticated = true;
-    res.render('profil', model.read(req.session.id)[0],model.read(req.session.id)[[1]]);
+    res.render('profil', model.read(req.session.id));
   }else{ res.redirect('/login');}
 
 });
 
 app.get('/profil',(req,res) =>{
-  res.render('profil',model.read(req.session.id)[0])
+  res.render('profil',model.read(req.session.id))
 })
 
+app.get('/profil_amis/:id',(req,res) =>{
+  res.render('profil',model.read_friend(req.params.id))
+})
 
 app.get('/logout',(req,res)=>{
   req.session.username = null;
