@@ -28,6 +28,14 @@ function is_authentificated(req, res, next) {
   res.status(401).send('Authentication required');
 }
 
+function authenticated(req,res,next){
+  if(req.session.username) {
+    res.locals.authenticated = true;
+    res.locals.name = req.session.name;
+  }
+  return next();
+}
+
 function can_see (req,res,next) {
   if(req.session.username != undefined) {
     res.locals.authenticated = true;
@@ -36,10 +44,13 @@ function can_see (req,res,next) {
   }
   return next();
 }
+
 app.use(can_see);
+app.use(authenticated);
+
 
 app.get('/', (req, res) => {
-    res.render('index');
+  res.render('index',{user : model.allUser(), list_actions : model.allActions()});
   });
 
 app.get('/register', (req,res) => {
@@ -59,9 +70,9 @@ app.post('/register',(req,res) => {
   
 })
 
-app.get('/login',(req,res) =>{
+/* app.get('/login',(req,res) =>{
   res.render('login');
-});
+  });*/
 
 app.post('/login',(req,res) =>{
   // console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
@@ -70,7 +81,7 @@ app.post('/login',(req,res) =>{
     req.session.username = req.body.username;
     res.locals.authenticated = true;
     res.render('profil', model.read(req.session.id));
-  }else{ res.redirect('/login');}
+  }else{ res.redirect('/');}
 
 });
 
@@ -79,12 +90,23 @@ app.get('/profil',(req,res) =>{
 })
 
 app.get('/profil_amis/:id',(req,res) =>{
-  res.render('profil',model.read_friend(req.params.id))
+  if(req.params.id == req.session.id) res.redirect('/profil');
+  res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
+  res.render('profil_amis',model.read_friend(req.params.id))
 })
 
 app.get('/logout',(req,res)=>{
   req.session.username = null;
   res.redirect('/')
+})
+
+app.get('/datalist',(req,res) => {
+  res.render('DataList',{list_actions : model.allActions()});
+})
+
+app.get('/addFriend/:id',(req,res) => { 
+  model.addFriend(req.session.id, req.params.id);
+  res.redirect('/profil_amis/'+req.session.id);
 })
 
 

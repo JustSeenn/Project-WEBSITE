@@ -45,7 +45,6 @@ exports.read = (id) => {
   };
 
   exports.read_friend = (id) => {
-    console.log(id)
     if(id != -1) {
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
 
@@ -58,6 +57,32 @@ exports.read = (id) => {
       return null;
     }
   };
+
+  exports.allActions = () => {
+    var actions = db.prepare("SELECT descriptions,points  FROM list_actions order by points desc").all();
+    if(actions.length != 0) return actions;
+    else return null;
+  }
+
+  exports.allUser = () => {
+    var users = db.prepare("SELECT id,username,points FROM user order by points desc").all();
+    if(users.length != 0) return users;
+    else return null;
+  }
+
+  exports.isFriend = (idU, idF) => {
+    if(!idU) return false;
+    var isFriend = db.prepare("SELECT * FROM friends where id_u = ? and id_f = ?").get(idU, idF);
+    if(isFriend) return true;
+    else return false;
+  }
+
+  exports.addFriend = (idU, idF) => {
+    if(idU && idF) {
+      var add = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idU, idF);
+      var reverseadd = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
+    }
+  }
 
 
 

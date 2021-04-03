@@ -19,13 +19,14 @@
       <div>
         {{#authenticated}}
         <a href="/profil" class="btn btn-dark">Profil</a>
-        <a href="/logout" class="btn btn-dark"> LOGOUT </a>
+        <a href="/logout" class="btn btn-danger"> LOGOUT </a>
         {{name}}
         {{/authenticated}}
-        {{^authenticated}}
+        <!--{{^authenticated}}
        <a href="/login" class="btn btn-dark"> LOGIN </a>
         <a href="/register" class="btn btn-dark"> REGISTER </a>
         {{/authenticated}}
+        -->
       </div>
     </div>
 
