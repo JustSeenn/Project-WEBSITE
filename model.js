@@ -22,7 +22,7 @@ exports.login = (username,password) => {
 };
 
 exports.read = (id) => {
-    
+    console.log(id)
     if(id != -1) {
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
