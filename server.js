@@ -62,7 +62,7 @@ function authenticated(req,res,next){
   return next();
 }
 
-function can_see (req,res,next) {
+/*function can_see (req,res,next) {
   if(req.session.username != undefined) {
     res.locals.authenticated = true;
     res.locals.name  = req.session.name;
@@ -71,7 +71,7 @@ function can_see (req,res,next) {
   return next();
 }
 
-app.use(can_see);
+app.use(can_see);*/ //can_see pareil que authenticated et le code etait déja conditionné avec authenticated
 app.use(authenticated);
 
 
@@ -126,6 +126,7 @@ app.get('/profil',(req,res) =>{
 app.get('/profil_amis/:id',(req,res) =>{
   if(req.params.id == req.session.id) res.redirect('/profil');
   res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
+  if(res.locals.isFriend == -1) res.redirect('/');
   res.render('profil_amis',model.read_friend(req.params.id))
 })
 
