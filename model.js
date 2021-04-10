@@ -84,6 +84,13 @@ exports.read = (id) => {
     }
   }
 
+  exports.update = (id,username,firstname,lasname,email,description) =>{
+    console.log(id,username,firstname,lasname,email,description)
+    var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,id)
+
+    return id
+  }
+
 
 
 

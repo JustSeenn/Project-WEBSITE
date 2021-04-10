@@ -146,6 +146,13 @@ app.get('/addFriend/:id',(req,res) => {
 app.get('/uploads/*', (req, res) => {
   res.sendFile(req.url, {root: './'})
 });
+app.get('/parameter',(req,res) => {
+  res.render('parameter',model.read_friend(req.session.id))
+})
 
+app.post('/parameter',(req,res)=>{
+  model.update(req.session.id,req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.description)
+  res.render('profil',model.read(req.session.id))
+})
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 
