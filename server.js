@@ -10,7 +10,8 @@ const _ = require('lodash');
 var randomstring = Math.random().toString(36).slice(-15);
 
 app.use(express.static('PROJET_WEB_S4'));
-app.use(express.static('upload'));
+app.use(express.static('uploads'));
+app.use(express.static('pictures'));
 
 
 // SET STORAGE
@@ -144,6 +145,10 @@ app.get('/addFriend/:id',(req,res) => {
   res.redirect('/profil_amis/'+req.session.id);
 })
 app.get('/uploads/*', (req, res) => {
+  res.sendFile(req.url, {root: './'})
+});
+
+app.get('/pictures/*', (req, res) => {
   res.sendFile(req.url, {root: './'})
 });
 app.get('/parameter',(req,res) => {

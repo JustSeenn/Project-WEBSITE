@@ -1,12 +1,54 @@
 {{> header}}
-  <!-- <div id = "background" class="jumbotron jumbotron-fluid"> -->
-  <!-- <div id = "background" class="jumbotron jumbotron-fluid" style="background-image: url('https://alternativi.fr/uploads/articles/154/etes-vous-prets-a-renoncer-a-certains-privileges-modernes-pour-sauver-la-planete-4aa.jpg');background-repeat: no-repeat;background-attachment: relative;background-position: center center;background-size: cover;font-family: 'Times New Roman', Times, serif;"> -->
+<head>
+  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=0.9">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <style>
+        .vertical-line{
+        border-left: 2px solid #000;
+        display: inline-block;
+        height: 800px;
+        margin: 0 20px;
+      }
+ /*the container must be positioned relative:*/
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+  }
   
-    <!-- <div class="container text-center" > -->
-      <!-- <h1 class="display-4" style="color: rgb(0, 0, 0);">Une Action Pour la Nature c'est un Point pour la vie</h1> -->
-    <!-- </div> -->
-  <!-- </div> -->
-  <!-- <br><br><br><br> -->
+  
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+  }
+  
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+    background-color: #e9e9e9; 
+  }
+  
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
+  }
+  </style>
+</head> 
   {{#authenticated}}
   <div class="container">
     <div class="row">
@@ -40,19 +82,261 @@
   {{/authenticated}}
 
   {{^authenticated}} 
-    <form action="/login" method="post">
-      <div class="row row-cols-1 row-cols-sm-2">
-          <div class="col">
-              <h1> Login </h1>
-              <p> Username :<input class="form-control" type="text" name = "username" value="name"></p>
-              <p> Password :<input class="form-control" type="password" name = "password" value="password"></p>
-              <input class="form-control btn btn-primary" type="submit" value="login">
-          </div>
+<div class="container">
+  <div class="row space-between  spa text-center">
+    <div class="col" style="margin-left:-50px; ">
+      <div class="card" style="border-radius: 20px;">
+        <div class="card-body">
+    <form action="/register" method="post"  enctype="multipart/form-data">
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          
+            <label for="inputUsername4">Username</label>
+            <input type="text" class="form-control" id="inputUsername4" name="username" placeholder="Username">
+          
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Password</label>
+          <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Password">
+        </div>
       </div>
+      <div class="form-row">
+        
+        <div class="form-group col-md-6">
+          <label for="inputFirstName4">FirstName</label>
+          <input type="text" class="form-control" id="inputUsername4" name="firstname" placeholder="Username">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputLastName4">LastName</label>
+          <input type="text" class="form-control" id="inputPassword4" name="lastname" placeholder="Password">
+        </div>
+      </div>
+      
+      
+      <div class="form-group">
+        <label for="inputEmail4">Email</label>
+        <input type="email" class="form-control" id="inputEmail4" name="email" placeholder="Email">
+        
+      </div>
+      <div class="form-group">
+        <a href="#" id="fileSelect">Sélectionnez des fichiers</a>
+    
+        <input class="form-control" id="fileElem" type="file" name="avatar" accept='image/png, image/jpeg' onchange="handleFiles(this.files)" />
+    
+        <div id="fileList">
+          <p>Aucun fichier sélectionné !</p>
+        </div>
+      </div>
+    
+      <div class="form-group">
+    
+        <label for="inputAddress">Address</label>
+        <input type="text" class="form-control" id="inputAddress" name="adress" placeholder="1234 Main St">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputCity">City</label>
+          <input type="text" class="form-control" name="city" id="inputCity">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputState">Country</label>
+          
+          <input type="text" class="form-control" id="myInput" name="myCountry" placeholder="Country">
+        
+        </div>
+      
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="inputState">Description</label>
+          
+          <input type="textarea" class="form-control" id="myDescritpion" name="description">
+      
+        </div>
+      
+      </div>
+      <button type="submit" class="btn btn-primary">Sign in</button>
+      
+    
     </form>
+        </div>
+      </div>
+  
+    </div>
+    <div class="col">
+      <a>
+        <img src="pictures/arbre2.png" style="background-color:transparent; margin-top:50px; margin-right: -60%;" width="500" height="600" alt="..." >  <!--Repertoir static public-->
+      </a>
+    </div>
+  </div>
+</div>
+    
   {{/authenticated}}
   <br><br><br>
   {{> cookies}}
   <!-- <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br></div> -->
   
   {{> footer}}
+
+  <script>
+
+    function handleFiles(files) {
+        if (!files.length) {
+          fileList.innerHTML = "<p>Aucun fichier sélectionné !</p>";
+        } else {
+          fileList.innerHTML = "";
+          var list = document.createElement("ul");
+          fileList.appendChild(list);
+          for (var i = 0; i < files.length; i++) {
+            var li = document.createElement("li");
+            list.appendChild(li);
+      
+            var img = document.createElement("img");
+            img.src = window.URL.createObjectURL(files[i]);
+            img.height = 60;
+            img.onload = function() {
+              window.URL.revokeObjectURL(this.src);
+            }
+            li.appendChild(img);
+            var info = document.createElement("span");
+            info.innerHTML = files[i].name + ": " + files[i].size + " bytes";
+            li.appendChild(info);
+          }
+        }
+      }
+      function sendFiles() {
+      var imgs = document.querySelectorAll(".obj");
+    
+      for (var i = 0; i < imgs.length; i++) {
+        new FileUpload(imgs[i], imgs[i].file);
+      }
+    }
+    function FileUpload(img, file) {
+      var reader = new FileReader();
+      this.ctrl = createThrobber(img);
+      var xhr = new XMLHttpRequest();
+      this.xhr = xhr;
+    
+      var self = this;
+      this.xhr.upload.addEventListener("progress", function(e) {
+            if (e.lengthComputable) {
+              var percentage = Math.round((e.loaded * 100) / e.total);
+              self.ctrl.update(percentage);
+            }
+          }, false);
+    
+      xhr.upload.addEventListener("load", function(e){
+              self.ctrl.update(100);
+              var canvas = self.ctrl.ctx.canvas;
+              canvas.parentNode.removeChild(canvas);
+          }, false);
+      xhr.open("POST", "http://demos.hacks.mozilla.org/paul/demos/resources/webservices/devnull.php");
+      xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
+      reader.onload = function(evt) {
+        xhr.sendAsBinary(evt.target.result);
+      };
+      reader.readAsBinaryString(file);
+    }
+    
+       function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+              /*check if the item starts with the same letters as the text field value:*/
+              if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                });
+                a.appendChild(b);
+              }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+              /*If the arrow DOWN key is pressed,
+              increase the currentFocus variable:*/
+              currentFocus++;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 38) { //up
+              /*If the arrow UP key is pressed,
+              decrease the currentFocus variable:*/
+              currentFocus--;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 13) {
+              /*If the ENTER key is pressed, prevent the form from being submitted,*/
+              e.preventDefault();
+              if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+              }
+            }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = (x.length - 1);
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+          except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
+      /*execute a function when someone clicks in the document:*/
+      document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+      });
+      } 
+      var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican escription","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+    
+    /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+    autocomplete(document.getElementById("myInput"), countries);
+    </script>
