@@ -63,6 +63,17 @@ function authenticated(req,res,next){
   return next();
 }
 
+function added(req, res, next) {
+  const info = {
+    'action-added': {type: 'success', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
+  }
+  if(req.query.info && req.query.info in info) {
+    res.locals.info = info[req.query.info];
+  }
+  return next();
+}
+app.use(added);
+
 /*function can_see (req,res,next) {
   if(req.session.username != undefined) {
     res.locals.authenticated = true;
@@ -75,6 +86,10 @@ function authenticated(req,res,next){
 app.use(can_see);*/ //can_see pareil que authenticated et le code etait déja conditionné avec authenticated
 app.use(authenticated);
 
+app.get('/added/:id', (req, res) => {
+  model.addUserrActions(req.params.id, req.session.id);
+  res.redirect('/profil/?info=action-added');
+})
 
 app.get('/', (req, res) => {
   res.render('index',{user : model.allUser(), list_actions : model.allActions()});
@@ -120,7 +135,7 @@ app.post('/login',(req,res) =>{
 });
 
 app.get('/profil',(req,res) =>{
-  
+  console.log(model.read(req.session.id))
   res.render('profil',model.read(req.session.id))
 })
 

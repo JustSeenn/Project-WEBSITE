@@ -736,19 +736,13 @@ background:#eee;
                         <th> Date</th>
                         <th> Nombres de points rapporté</th>
                     </thead>
+                    {{#action}}
                     <tr>
-                        <td>Trié ses déchets</td>
-                        <td> 12/05/2021</td>
-                        <td><i class="fa fa-caret-up text-info pr10"></i> 50 points</td>
+                        <td>{{descriptions}</td>
+                        <td> DD/MM/YYYY</td>
+                        <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
                     </tr>
-                    <tr>
-                        <td> Ramasser un détritut</td>
-                        <td> 27/03/2021</td>
-                        <td><i class="fa fa-caret-up text-info pr10"></i> 60 points</td>
-                    </tr>
-
-
-
+                    {{/action}}
                 </table>
 
                   

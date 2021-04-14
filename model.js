@@ -38,6 +38,8 @@ exports.read = (id) => {
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
       found.count_friends = count_friends.count; 
       
+      var actions = db.prepare('SELECT descriptions,points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
+      found.action = actions;
       return found;
     } else {
       return null;
@@ -80,6 +82,9 @@ exports.read = (id) => {
       }
 
     if(actions2.length != 0) return actions2;
+
+    var actions = db.prepare("SELECT * FROM list_actions order by points desc").all();
+    if(actions.length != 0) return actions;
     else return null;
   }
 
@@ -109,6 +114,12 @@ exports.read = (id) => {
 
     return id
   }
+
+  exports.addUserrActions = (idA,idU) => {
+    var id = db.prepare('INSERT INTO user_actions (id_u, id_a) VALUES (?, ?)').run(idU, idA);
+    return id;
+  }
+
 
 
 

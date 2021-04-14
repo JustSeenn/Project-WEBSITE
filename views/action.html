@@ -1,0 +1,45 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Ajoutez une Action
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="dropdown">
+                <label for="exampleInputEmail1" class="form-label">Vous pouvez sélectionnez une action déja existante</label>
+                <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  Sélectionnez une action réalisée
+                </a>
+              
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  {{#list_actions}}
+                  <li><a class="dropdown-item" href="/added/{{id}}">{{descriptions}}
+                    <span class="badge badge-primary">{{points}}pts</span></a></li>
+                  {{/list_actions}}
+                </ul>
+              </div>
+              <br><br><br><br>
+              <div class="container">
+                <form>
+                    <label for="exampleInputEmail1" class="form-label">ou soumettre l'ajout d'une action aux administrateurs</label>
+                    <input type="text" class="form-control" id="actionRequest">
+                    <br>
+                    <button type="submit" class="btn btn-primary btn-sm">send request</button>
+                </form>
+              </div>
+              
+              
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
