@@ -59,8 +59,27 @@ exports.read = (id) => {
   };
 
   exports.allActions = () => {
-    var actions = db.prepare("SELECT descriptions,points  FROM list_actions order by points desc").all();
-    if(actions.length != 0) return actions;
+    var actions2 =[]
+    var number = []
+    var number2
+    var max = (db.prepare("SELECT count(*) as count  FROM list_actions ").get()).count
+    for(var i=0;i<3;i++){
+       number2 = Math.floor(Math.random() *  (max-1))
+      while(number.includes(number2)){
+          number2 = Math.floor(Math.random() * (max-1))
+        }
+        number[i]=number2
+        actions2[i] = db.prepare("SELECT descriptions,points  FROM list_actions where id = ?").get(number[i]+1);
+        actions2.sort(function compare(a,b){
+          if(a.points > b.points)
+            return -1
+          if(a.points < b.points)
+            return 1
+          return 0
+        })
+      }
+
+    if(actions2.length != 0) return actions2;
     else return null;
   }
 
