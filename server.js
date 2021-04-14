@@ -92,7 +92,7 @@ app.get('/added/:id', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  res.render('index',{user : model.allUser(), list_actions : model.allActions()});
+  res.render('index',{user : model.allUser(),list_rankActions : model.rankAction(), list_actions : model.allActions()});
   });
 
 app.get('/register', (req,res) => {
@@ -123,7 +123,7 @@ app.post('/register', upload.single('avatar') ,function(req,res,next){
   
   
 app.post('/login',(req,res) =>{
-  console.log(req.body)
+  //console.log(req.body)
   // console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
   if(req.body.username !=null && req.body.password != null && model.login(req.body.username,req.body.password) != -1){  
     req.session = model.login(req.body.username,req.body.password);

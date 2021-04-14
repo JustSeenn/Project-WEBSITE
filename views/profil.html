@@ -676,7 +676,6 @@ background:#eee;
                 <tbody>
                   <tr>
                     <td>
-                    
                       <span class="fa fa-trophy text-warning"></span>
                     </td>
                     <td>Points</td>
@@ -731,22 +730,19 @@ background:#eee;
             <div class="tab-content p30" style="height: 730px;">
               <div id="tab1" class="tab-pane active">
                 <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
-                    <thead> 
-                        <th> Actions réalisés</th>
-                        <th> Date</th>
-                        <th> Nombres de points rapporté</th>
-                    </thead>
-                    {{#action}}
-                    <tr>
-                        <td>{{descriptions}</td>
-                        <td> DD/MM/YYYY</td>
-                        <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
-                    </tr>
-                    {{/action}}
+                  <thead> 
+                      <th> Actions réalisés</th>
+                      <th> Date</th>
+                      <th> Nombres de points rapporté</th>
+                  </thead>
+                  {{#action}}
+                  <tr>
+                    <td>{{descriptions}}</td>
+                    <td>DD/MM/YYYY</td>
+                    <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
+                  </tr>
+                  {{/action}}
                 </table>
-
-                  
-                
               </div>
               <div id="tab2" class="tab-pane"></div>
               <div id="tab3" class="tab-pane"></div>
