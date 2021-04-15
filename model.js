@@ -6,64 +6,82 @@ let db = new Sqlite('db.sqlite');
 
 
 exports.new_user = (username ,firstname , lastname , email,adress,password , avatar, description) => {
-    if(username && firstname && lastname && email && adress && password && avatar && description){
-        var date =  new Date();
+  try{
+    var date =  new Date();
+    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,points,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description, @points, @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,points:0,date:date.getDate()}).lastInsertRowid;
+    return id;
+  }
+  catch{
+    return -1;
+  }
+        /*var date =  new Date();
         var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,points,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description, @points, @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,points:0,date:date.getDate()}).lastInsertRowid;
         return id;
-    }else{
       return -1;
-    }
+    }*/
   }
 
 exports.login = (username,password) => {
+  try{
     var authen = db.prepare('SELECT id from user where username = ? and password = ?').get(username,password);
-    
-    return ( authen ? authen : -1);
+    if(!authen) return -1;
+    return authen;
+  }
+  catch{
+    return -1;
+  }
 };
 
 exports.read = (id) => {
-    console.log(id)
-    if(id != -1) {
+    try{
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
 
       var tab = [];
       for(var i=0 ; i < friend.length ; i++){
          tab[i] = db.prepare('SELECT username FROM user WHERE id = ?').get(friend[i].id) //TODO 
-         tab[i].points = db.prepare('SELECT points FROM user WHERE id = ?').get(friend[i].id).points
+         tab[i].points = db.prepare('SELECT ifnull(sum(points),0.0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(friend[i].id).points
          tab[i].id = friend[i].id
       }   
-      console.log(tab)
+      //console.log(tab)
       found.friends_name = tab;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
       found.count_friends = count_friends.count; 
       
       var actions = db.prepare('SELECT descriptions,points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
       found.action = actions;
+
+      var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
+      found.points = points.points;
       return found;
-    } else {
-      return null;
     }
+    catch{
+      return -1;
+    }
+    
   };
 
   exports.read_friend = (id) => {
-    if(id != -1) {
+    try{
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
-
-      
-      var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
+      var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
+      found.points = points.points;
+      var actions = db.prepare('SELECT descriptions,points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
+      found.action = actions;
+      var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id);
       found.count_friends = count_friends.count; 
-      
       return found;
-    } else {
-      return null;
     }
+    catch{
+      return -1;
+    }
+    
   };
 
   exports.allActions = () => {
       var actions = db.prepare("SELECT * FROM list_actions order by points desc").all();
       if(actions.length != 0) return actions;
-      else return null;
+      else return -1;
   }
 
   exports.rankAction = ()=>{
@@ -92,35 +110,52 @@ exports.read = (id) => {
   }
 
   exports.allUser = () => {
-    var users = db.prepare("SELECT id,username,points FROM user order by points desc").all();
+    var users = db.prepare("SELECT u.id,u.username,ifnull(sum(points),0) as points FROM user as u inner join (list_actions as la inner join user_actions as ua) on la.id=ua.id_a and  u.id = ua.id_u group by u.id order by points desc").all();
     if(users.length != 0) return users;
-    else return null;
+    else return -1;
   }
 
   exports.isFriend = (idU, idF) => {
-    if(!idU) return false;
-    var isFriend = db.prepare("SELECT * FROM friends where id_u = ? and id_f = ?").get(idU, idF);
-    if(isFriend) return true;
-    else return false;
-  }
-
-  exports.addFriend = (idU, idF) => {
-    if(idU && idF) {
-      var add = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idU, idF);
-      var reverseadd = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
+    try{
+      var isFriend = db.prepare("SELECT * FROM friends where id_u = ? and id_f = ?").get(idU, idF);
+      if(isFriend) return true;
+      else return false;
+    }
+    catch{
+      return -1;
     }
   }
 
-  exports.update = (id,username,firstname,lasname,email,description) =>{
-    console.log(id,username,firstname,lasname,email,description)
-    var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,id)
-
-    return id
+  exports.addFriend = (idU, idF) => {
+    try{
+      var add = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idU, idF);
+      var reverseadd = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
+    }
+    catch{
+      return -1;
+    }
+      
   }
 
-  exports.addUserrActions = (idA,idU) => {
-    var id = db.prepare('INSERT INTO user_actions (id_u, id_a) VALUES (?, ?)').run(idU, idA);
-    return id;
+  exports.update = (id,username,firstname,lasname,email,description) =>{
+    try{
+      var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,id)
+      return id;
+    }
+    catch{
+      return -1
+    }
+  }
+
+  exports.addUserActions = (idA,idU) => {
+    try{
+      var id = db.prepare('INSERT INTO user_actions (id_u, id_a) VALUES (?, ?)').run(idU, idA);
+      return id;
+    }
+    catch{
+      console.log('error')
+      return -1
+    }
   }
 
 

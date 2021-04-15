@@ -20,7 +20,7 @@ var storage = multer.diskStorage({
     cb(null, 'uploads')
   },
   filename: function (req, file, cb) {
-    console.log(req)
+    //console.log(req)
     cb(null, file.fieldname + '-' + file.originalname)
   }
 })
@@ -49,10 +49,12 @@ app.use(cookieSession({
 
 
 function is_authentificated(req, res, next) {
-  if(req.session.id != undefined) {
+  if(req.session.username) {
     return next();
   }
-  res.status(401).send('Authentication required');
+  else{
+    res.redirect('/?info=no-authentify')
+  }
 }
 
 function authenticated(req,res,next){
@@ -65,7 +67,17 @@ function authenticated(req,res,next){
 
 function added(req, res, next) {
   const info = {
-    'action-added': {type: 'success', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
+    'action-added': {type: 'primary', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
+    'invalid-register' : {type: 'danger', text: 'formulaire mal rempli veuillez recommencez'},
+    'already-existant' :{type :'danger', text : "Désolé l'action choisis existe déja dans vos actions réalisés"},
+    'invalid-parameter' :{type :'danger', text : "votre modification n'est pas effective pour cause de mauvais parametre"},
+    'valid-parameter' :{type :'success', text : "vos données ont été correctement mis à jour"},
+    'valid-register' :{type :'primary', text : "vous avez été correctement enregistré, l'environnement vous souhaite la bienvenue"},
+    'no-authentify' :{type :'danger', text : "vous ne pouvez effectué cette action car vous n'êtes pas connecté"},
+    'connected' :{type :'info', text : "vous êtes bien connecté"},
+    'not-connected' :{type :'danger', text : "mauvais identifiant de connexion"},
+    'disconnected' :{type :'success', text : "vous avez bien été déconnecté"},
+    'error' :{type :'info', text : "désolé opération impossible pour l'instant réessayer ultérieurement"},
   }
   if(req.query.info && req.query.info in info) {
     res.locals.info = info[req.query.info];
@@ -74,22 +86,8 @@ function added(req, res, next) {
 }
 app.use(added);
 
-/*function can_see (req,res,next) {
-  if(req.session.username != undefined) {
-    res.locals.authenticated = true;
-    res.locals.name  = req.session.name;
-    
-  }
-  return next();
-}
-
-app.use(can_see);*/ //can_see pareil que authenticated et le code etait déja conditionné avec authenticated
 app.use(authenticated);
 
-app.get('/added/:id', (req, res) => {
-  model.addUserrActions(req.params.id, req.session.id);
-  res.redirect('/profil/?info=action-added');
-})
 
 app.get('/', (req, res) => {
   res.render('index',{user : model.allUser(),list_rankActions : model.rankAction(), list_actions : model.allActions()});
@@ -104,59 +102,62 @@ app.post('/register', upload.single('avatar') ,function(req,res,next){
   //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
   
   req.session.id = model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description);
- 
+  
   if(req.session.id == -1){
     res.locals.error = true;
-    res.render('register');
+    res.redirect('/?info=invalid-register');
   }
   else{
     req.session.username = req.body.username;
-    res.redirect('/profil');}
-  
-})
+    res.redirect('/profil/?info=valid-register');}
+    
+  })
 
  app.get('/login',(req,res) =>{
-  res.render('login');
+   res.render('login');
   });
   
   
   
   
 app.post('/login',(req,res) =>{
-  //console.log(req.body)
-  // console.log(req.body.username,req.body.password,model.login(req.body.username,req.body.password).id  )
-  if(req.body.username !=null && req.body.password != null && model.login(req.body.username,req.body.password) != -1){  
-    req.session = model.login(req.body.username,req.body.password);
+  var id =  model.login(req.body.username,req.body.password);
+  if(id != -1){
+    req.session = id;
     req.session.username = req.body.username;
     res.locals.authenticated = true;
-    res.render('profil', model.read(req.session.id));
-  }else{ res.redirect('/');}
+    res.redirect('/?info=connected');
+  }else{ res.redirect('/?info=not-connected');}
 
 });
 
-app.get('/profil',(req,res) =>{
-  console.log(model.read(req.session.id))
+app.get('/profil',is_authentificated,(req,res) =>{
+  console.log(req.session.id)
+  //console.log(model.read(req.session.id))
   res.render('profil',model.read(req.session.id))
 })
 
-app.get('/profil_amis/:id',(req,res) =>{
+app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   if(req.params.id == req.session.id) res.redirect('/profil');
   res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
   if(res.locals.isFriend == -1) res.redirect('/');
   res.render('profil_amis',model.read_friend(req.params.id))
 })
 
-app.get('/logout',(req,res)=>{
+app.get('/logout',is_authentificated,(req,res)=>{
   req.session.username = null;
-  res.redirect('/')
+  res.redirect('/?info=disconnected')
 })
 
-app.get('/datalist',(req,res) => {
+app.get('/datalist',is_authentificated,(req,res) => {
   res.render('DataList',{list_actions : model.allActions()});
 })
 
-app.get('/addFriend/:id',(req,res) => { 
-  model.addFriend(req.session.id, req.params.id);
+app.get('/addFriend/:id',is_authentificated,(req,res) => { 
+  var id = model.addFriend(req.session.id, req.params.id);
+  if(id=-1){
+    res.redirect('/profil/?info=error')
+  }
   res.redirect('/profil_amis/'+req.session.id);
 })
 app.get('/uploads/*', (req, res) => {
@@ -170,9 +171,24 @@ app.get('/parameter',(req,res) => {
   res.render('parameter',model.read_friend(req.session.id))
 })
 
-app.post('/parameter',(req,res)=>{
-  model.update(req.session.id,req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.description)
-  res.render('profil',model.read(req.session.id))
+app.post('/parameter',is_authentificated,(req,res)=>{
+  var id = model.update(req.session.id,req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.description)
+  if(id == -1){
+    res.redirect('/profil/?info=invalid-parameter');
+  }
+  res.redirect('/profil/?info=valid-parameter');
 })
+
+app.get('/added/:id',is_authentificated,(req, res) => {
+  var id = model.addUserActions(req.params.id, req.session.id);
+  console.log(id)
+  if(id == -1){
+    res.redirect('/profil/?info=already-existant')
+  }
+  else {
+    res.redirect('/profil/?info=action-added')
+  };
+})
+
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 

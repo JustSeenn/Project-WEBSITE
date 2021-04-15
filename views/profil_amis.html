@@ -716,24 +716,18 @@ background:#eee;
             <div class="tab-content p30" style="height: 730px;">
               <div id="tab1" class="tab-pane active">
                 <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
-                    <thead> 
-                        <th> Actions réalisés</th>
-                        <th> Date</th>
-                        <th> Nombres de points rapporté</th>
-                    </thead>
-                    <tr>
-                        <td>Trié ses déchets</td>
-                        <td> 12/05/2021</td>
-                        <td><i class="fa fa-caret-up text-info pr10"></i> 50 points</td>
-                    </tr>
-                    <tr>
-                        <td> Ramasser un détritut</td>
-                        <td> 27/03/2021</td>
-                        <td><i class="fa fa-caret-up text-info pr10"></i> 60 points</td>
-                    </tr>
-
-
-
+                  <thead> 
+                    <th> Actions réalisés</th>
+                    <th> Date</th>
+                    <th> Nombres de points rapporté</th>
+                  </thead>
+                  {{#action}}
+                  <tr>
+                    <td>{{descriptions}}</td>
+                    <td>DD/MM/YYYY</td>
+                    <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
+                  </tr>
+                  {{/action}}
                 </table>
 
                   
