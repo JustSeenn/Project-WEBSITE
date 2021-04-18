@@ -652,9 +652,8 @@ background:#eee;
           <div class="media-body va-m">
             <h2 class="media-heading">{{firstname}} {{lastname}}
               <small> - Profile</small>
-              <a href="/parameter">
-                <i class="fa fa-cog" aria-hidden="true"></i>
-              </a>
+              
+                {{>parameter}}
             </h2>
             <p class="lead">{{description}}</p>
           </div>
@@ -719,7 +718,7 @@ background:#eee;
                     </div>
                 </div>
               {{/friends_name}}
-                
+              
                 
             </div>
           </div>
@@ -738,7 +737,7 @@ background:#eee;
                   {{#action}}
                   <tr>
                     <td>{{descriptions}}</td>
-                    <td>DD/MM/YYYY</td>
+                    <td>{{dates}}</td>
                     <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
                   </tr>
                   {{/action}}
@@ -751,6 +750,7 @@ background:#eee;
           </div>
         </div>
       </div>
+      
   </section>
 
   

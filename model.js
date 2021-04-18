@@ -6,14 +6,16 @@ let db = new Sqlite('db.sqlite');
 
 
 exports.new_user = (username ,firstname , lastname , email,adress,password , avatar, description) => {
+  console.log(username ,firstname , lastname , email,adress,password , avatar, description, "model")
   try{
     var date =  new Date();
-    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,points,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description, @points, @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,points:0,date:date.getDate()}).lastInsertRowid;
+    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date.getDate()}).lastInsertRowid;
     return id;
+  }catch{
+    return -1
   }
-  catch{
-    return -1;
-  }
+    
+  
         /*var date =  new Date();
         var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,points,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description, @points, @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,points:0,date:date.getDate()}).lastInsertRowid;
         return id;
@@ -48,7 +50,7 @@ exports.read = (id) => {
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
       found.count_friends = count_friends.count; 
       
-      var actions = db.prepare('SELECT descriptions,points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
+      var actions = db.prepare('SELECT descriptions,points,dates FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
       found.action = actions;
 
       var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
@@ -149,11 +151,23 @@ exports.read = (id) => {
 
   exports.addUserActions = (idA,idU) => {
     try{
-      var id = db.prepare('INSERT INTO user_actions (id_u, id_a) VALUES (?, ?)').run(idU, idA);
+      var date =  new Date();
+      var month = date.getMonth()*1+1
+      var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
+      var id = db.prepare('INSERT INTO user_actions (id_u, id_a, dates) VALUES (?, ?, ?)').run(idU, idA, date1);
       return id;
+    }catch{
+      return -1;
+    }
+    
+    
+  }
+
+  exports.deleteUser = (id) => {
+    try{
+      var id = db.prepare('DELETE FROM user where id = ?').run(id)
     }
     catch{
-      console.log('error')
       return -1
     }
   }

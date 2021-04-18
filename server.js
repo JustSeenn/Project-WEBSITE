@@ -100,8 +100,15 @@ app.get('/register', (req,res) => {
 app.post('/register', upload.single('avatar') ,function(req,res,next){
  
   //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+  console.log(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description, model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description))
+  try{
+    req.session.id = model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description);
+
+  }catch{
+    res.locals.error = true;
+    res.redirect('/?info=invalid-register');
+  }
   
-  req.session.id = model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description);
   
   if(req.session.id == -1){
     res.locals.error = true;
@@ -181,7 +188,7 @@ app.post('/parameter',is_authentificated,(req,res)=>{
 
 app.get('/added/:id',is_authentificated,(req, res) => {
   var id = model.addUserActions(req.params.id, req.session.id);
-  console.log(id)
+  console.log("Add action success :",id,req.params.id, req.session.id )
   if(id == -1){
     res.redirect('/profil/?info=already-existant')
   }
@@ -189,6 +196,21 @@ app.get('/added/:id',is_authentificated,(req, res) => {
     res.redirect('/profil/?info=action-added')
   };
 })
+app.post('/delete_account',(req,res) =>{
+  
+  res.render('confirm-delete')
+})
 
+app.post('/delete_account_valid',(req,res)=>{
+  console.log(req.body)
+  if(req.body.verification){
+    model.deleteUser(req.session.id)
+    req.session.username = null;
+    res.redirect('/?info=disconnected')
+  }else{
+    res.render('confirm-delete')
+  }
+  
+})
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 
