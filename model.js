@@ -12,7 +12,8 @@ exports.new_user = (username ,firstname , lastname , email,adress,password , ava
     var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date.getDate()}).lastInsertRowid;
     return id;
   }catch{
-    return -1
+    console.log(new Error().stack)
+      return -1
   }
     
   
@@ -30,7 +31,8 @@ exports.login = (username,password) => {
     return authen;
   }
   catch{
-    return -1;
+    console.log(new Error().stack)
+      return -1;
   }
 };
 
@@ -62,6 +64,7 @@ exports.read = (id) => {
       return found;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
     
@@ -80,6 +83,7 @@ exports.read = (id) => {
       return found;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
     
@@ -91,6 +95,7 @@ exports.read = (id) => {
       return requete;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -139,6 +144,7 @@ exports.read = (id) => {
       else return false;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -149,6 +155,7 @@ exports.read = (id) => {
       var reverseadd = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
       
@@ -160,6 +167,7 @@ exports.read = (id) => {
       return id;
     }
     catch{
+      console.log(new Error().stack)
       return -1
     }
   }
@@ -172,6 +180,7 @@ exports.read = (id) => {
       var id = db.prepare('INSERT INTO user_actions (id_u, id_a, dates) VALUES (?, ?, ?)').run(idU, idA, date1);
       return id;
     }catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -182,6 +191,7 @@ exports.read = (id) => {
       return action;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -192,6 +202,7 @@ exports.read = (id) => {
       return requete;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -202,6 +213,7 @@ exports.read = (id) => {
       return requete;
     }
     catch{
+      console.log(new Error().stack)
       return -1;
     }
   }
@@ -211,6 +223,7 @@ exports.read = (id) => {
       var id = db.prepare('DELETE FROM user where id = ?').run(id)
     }
     catch{
+      console.log(new Error().stack)
       return -1
     }
   }
