@@ -65,6 +65,13 @@ function authenticated(req,res,next){
   return next();
 }
 
+function isAdmin(req,res,next){
+  if(req.session.username == 'admin'){
+    res.locals.admin = true;
+  }
+  return next();
+}
+
 function added(req, res, next) {
   const info = {
     'action-added': {type: 'primary', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
@@ -78,6 +85,10 @@ function added(req, res, next) {
     'not-connected' :{type :'danger', text : "mauvais identifiant de connexion"},
     'disconnected' :{type :'success', text : "vous avez bien été déconnecté"},
     'error' :{type :'info', text : "désolé opération impossible pour l'instant réessayer ultérieurement"},
+    'requestSend' :{type :'success', text : "la requete a bien été envoyé"},
+    'actionAdd' :{type :'success', text : "l'action a bien été ajouté"},
+    'refuse' :{type :'info', text : "la requete a bien été refusé"},
+
   }
   if(req.query.info && req.query.info in info) {
     res.locals.info = info[req.query.info];
@@ -138,17 +149,22 @@ app.post('/login',(req,res) =>{
 
 });
 
-app.get('/profil',is_authentificated,(req,res) =>{
+app.get('/profil',is_authentificated,isAdmin,(req,res) =>{
   console.log(req.session.id)
+  console.log(req.session.username);
+  console.log(model.read(req.session.id))
   //console.log(model.read(req.session.id))
   res.render('profil',model.read(req.session.id))
 })
 
 app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   if(req.params.id == req.session.id) res.redirect('/profil');
-  res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
-  if(res.locals.isFriend == -1) res.redirect('/');
-  res.render('profil_amis',model.read_friend(req.params.id))
+  else{
+    res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
+    if(res.locals.isFriend == -1) res.redirect('/');
+    else res.render('profil_amis',model.read_friend(req.params.id))
+  }
+  
 })
 
 app.get('/logout',is_authentificated,(req,res)=>{
@@ -176,6 +192,11 @@ app.get('/pictures/*', (req, res) => {
 });
 app.get('/parameter',(req,res) => {
   res.render('parameter',model.read_friend(req.session.id))
+})
+
+app.get('/refuse_Request/:id',(req,res) => {
+  model.removeRequest(req.params.id);
+  res.redirect('/profil/?info=refuse');
 })
 
 app.post('/parameter',is_authentificated,(req,res)=>{
@@ -211,6 +232,17 @@ app.post('/delete_account_valid',(req,res)=>{
     res.render('confirm-delete')
   }
   
+})
+
+app.post('/add_request', (req,res) => {
+  model.addRequest(req.session.id,req.body.actionRequest);
+  res.redirect('/profil/?info=requestSend');
+})
+
+app.post('/add_Action', (req,res) => {
+  model.addAction(req.body.description_request,req.body.point_request);
+  model.removeRequest(req.body.request_id);
+  res.redirect('/datalist/?info=actionAdd')
 })
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 

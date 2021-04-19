@@ -55,6 +55,10 @@ exports.read = (id) => {
 
       var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
       found.points = points.points;
+
+      var requete = db.prepare('SELECT r.id, r.description, u.username FROM requete r INNER JOIN user u on u.id = r.id_u;').all();
+      found.requete = requete;
+
       return found;
     }
     catch{
@@ -72,6 +76,7 @@ exports.read = (id) => {
       found.action = actions;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id);
       found.count_friends = count_friends.count; 
+  
       return found;
     }
     catch{
@@ -79,6 +84,16 @@ exports.read = (id) => {
     }
     
   };
+
+  exports.read_admin = () => {
+    try{
+      var requete = db.prepare('SELECT * FROM requete r INNER JOIN user u on u.id = r.id_u');
+      return requete;
+    }
+    catch{
+      return -1;
+    }
+  }
 
   exports.allActions = () => {
       var actions = db.prepare("SELECT * FROM list_actions order by points desc").all();
@@ -159,8 +174,36 @@ exports.read = (id) => {
     }catch{
       return -1;
     }
-    
-    
+  }
+
+  exports.addAction = (description, point) => {
+    try{
+      var action = db.prepare('INSERT INTO list_actions (descriptions, points) VALUES (?, ?)').run(description, point)
+      return action;
+    }
+    catch{
+      return -1;
+    }
+  }
+
+  exports.addRequest = (idU, description) => {
+    try{
+      var requete = db.prepare('INSERT INTO requete (id_u,description) VALUES (?, ?)').run(idU, description);
+      return requete;
+    }
+    catch{
+      return -1;
+    }
+  }
+
+  exports.removeRequest = (id) => {
+    try{
+      var requete = db.prepare('DELETE FROM requete WHERE id = ?').run(id);
+      return requete;
+    }
+    catch{
+      return -1;
+    }
   }
 
   exports.deleteUser = (id) => {

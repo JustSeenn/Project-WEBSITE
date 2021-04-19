@@ -743,11 +743,38 @@ background:#eee;
                   {{/action}}
                 </table>
               </div>
-              <div id="tab2" class="tab-pane"></div>
-              <div id="tab3" class="tab-pane"></div>
-              <div id="tab4" class="tab-pane"></div>
             </div>
           </div>
+          <br><br>
+          {{#admin}}
+          <div class="tab-block">
+            <div class="tab-content p30" style="height: 730px;">
+              <div id="tab1" class="tab-pane active">
+                <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+                  <thead> 
+                      <th> User </th>
+                      <th> Description</th>
+                      <th> Points</th>
+                  </thead>
+                  {{#requete}}
+                  <form action="/add_Action" method="POST">
+                    <tr>
+                      <td >{{username}}</td>
+                      <td><input name = "description_request" value="{{description}}" readonly></td>
+                      <td>
+                        <input type="text" name="point_request">
+                        <input type ="hidden" name="request_id" value={{id}}>
+                        <button class="btn btn-success" type="submit">accept</button>
+                        <a class="btn btn-danger" href="/refuse_Request/{{id}}" role="button">Refuse</a>
+                      </td>
+                    </tr>
+                  </form>
+                  {{/requete}}
+                </table>
+              </div>
+            </div>
+          </div>
+          {{/admin}}
         </div>
       </div>
       
