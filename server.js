@@ -61,6 +61,17 @@ function authenticated(req,res,next){
   if(req.session.username) {
     res.locals.authenticated = true;
     res.locals.name = req.session.name;
+
+    
+  }
+  return next();
+}
+
+function isChallenge(req,res,next){
+  console.log("Je rentre isChallenge", req.session.id)
+  if(model.isChallenge(req.session.id)){
+    console.log("isChallenge est valid")
+    res.locals.challenge = true;
   }
   return next();
 }
@@ -111,7 +122,6 @@ app.get('/register', (req,res) => {
 app.post('/register', upload.single('avatar') ,function(req,res,next){
  
   //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-  console.log(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description, model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description))
   try{
     req.session.id = model.new_user(req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.adress,req.body.password, req.file.originalname, req.body.description);
 
@@ -140,20 +150,22 @@ app.post('/register', upload.single('avatar') ,function(req,res,next){
   
 app.post('/login',(req,res) =>{
   var id =  model.login(req.body.username,req.body.password);
+  
   if(id != -1){
     req.session = id;
     req.session.username = req.body.username;
     res.locals.authenticated = true;
+
+
+    
+    
     res.redirect('/?info=connected');
   }else{ res.redirect('/?info=not-connected');}
 
 });
 
-app.get('/profil',is_authentificated,isAdmin,(req,res) =>{
-  console.log(req.session.id)
-  console.log(req.session.username);
-  console.log(model.read(req.session.id))
-  //console.log(model.read(req.session.id))
+app.get('/profil',is_authentificated,isAdmin,isChallenge,(req,res) =>{
+  
   res.render('profil',model.read(req.session.id))
 })
 
@@ -209,7 +221,7 @@ app.post('/parameter',is_authentificated,(req,res)=>{
 
 app.get('/added/:id',is_authentificated,(req, res) => {
   var id = model.addUserActions(req.params.id, req.session.id);
-  console.log("Add action success :",id,req.params.id, req.session.id )
+ 
   if(id == -1){
     res.redirect('/profil/?info=already-existant')
   }
@@ -223,7 +235,7 @@ app.post('/delete_account',(req,res) =>{
 })
 
 app.post('/delete_account_valid',(req,res)=>{
-  console.log(req.body)
+  
   if(req.body.verification){
     model.deleteUser(req.session.id)
     req.session.username = null;
@@ -243,6 +255,24 @@ app.post('/add_Action', (req,res) => {
   model.addAction(req.body.description_request,req.body.point_request);
   model.removeRequest(req.body.request_id);
   res.redirect('/datalist/?info=actionAdd')
+})
+
+app.get('/propose_challenge/:id', (req,res) => {
+  var addChallenge = model.addChallenge(req.session.id, req.params.id)
+  console.log(addChallenge)
+  res.render('profil',model.read(req.session.id))
+})
+
+app.get('/challenge_accepted/:username',(req,res) => {
+  // C'est la que ça devient compliqué
+  model.challengeAccepted(req.session.id,req.params.username)
+  res.render('profil',model.read(req.session.id))
+})
+
+app.get('/challenge_refused/:id',(req,res) => {
+    model.deleteChallenge(id)
+    res.locals.challenge = false
+    res.render('profil',model.read(req.session.id))
 })
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 

@@ -6,7 +6,6 @@ let db = new Sqlite('db.sqlite');
 
 
 exports.new_user = (username ,firstname , lastname , email,adress,password , avatar, description) => {
-  console.log(username ,firstname , lastname , email,adress,password , avatar, description, "model")
   try{
     var date =  new Date();
     var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date.getDate()}).lastInsertRowid;
@@ -47,7 +46,12 @@ exports.read = (id) => {
          tab[i].points = db.prepare('SELECT ifnull(sum(points),0.0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(friend[i].id).points
          tab[i].id = friend[i].id
       }   
-      //console.log(tab)
+      
+      if(this.isChallenge(id)){
+        var id_u = db.prepare("SELECT id_u from challenge where id_f=?").get(id)
+        found.challenge_name = db.prepare("select username from user where id = ?").get(id_u.id_u).username
+        console.log(found.challenge_name)
+      }
       found.friends_name = tab;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
       found.count_friends = count_friends.count; 
@@ -79,7 +83,7 @@ exports.read = (id) => {
       found.action = actions;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id);
       found.count_friends = count_friends.count; 
-  
+      
       return found;
     }
     catch{
@@ -226,6 +230,43 @@ exports.read = (id) => {
       console.log(new Error().stack)
       return -1
     }
+  }
+
+  exports.addChallenge = (id_u,id_f) => {
+    
+    try{
+      var requete = db.prepare('INSERT INTO challenge (id_u,id_f,accepted) VALUES (?, ?,0)').run(id_u, id_f);
+      return requete
+    }catch{
+      return -1;
+    }
+  }
+
+  exports.isChallenge = (id_f) => {
+    var requete = db.prepare("SELECT * FROM challenge WHERE id_f = ? and accepted=0").get(id_f);
+    if(requete)
+      return true
+    return false
+  }
+
+  exports.deleteChallenge = (id_f) => {
+    try{
+      var requete = db.prepare("DELETE FROM challenge WHERE id_f=?").run(id)
+      return requete
+    }catch{
+      return -1
+    }
+    
+  }
+
+  exports.challengeAccepted = (id_f,username) => {
+    console.log(id_f, username)
+    var date = new Date();
+    var month = date.getMonth()*1+1
+    var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
+    var id_u = db.prepare("SELECT id from user where username=?").get(username)
+    var requete = db.prepare("INSERT INTO challenge (accepted,date) values (1,?) where id_f = ? and id_u = ?").run(date1,id_f,id_u)
+    return requete
   }
 
 

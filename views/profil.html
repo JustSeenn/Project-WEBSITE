@@ -640,6 +640,11 @@ background:#eee;
 
 </head>
 {{> header}}
+{{#challenge}}
+<div class="alert alert-info" role="alert">
+  {{challenge_name}} t'as lancé un défi veux tu <a href="/challenge_accepted/{{challenge_name}}" class="alert-link">l'accepter</a> ou le <a href="/challenge_refused/{{id}}" class="alert-link">refuser </a> ?
+</div>              
+{{/challenge}}
 <section id="content" class="container-sm">
     <!-- Begin .page-heading -->
     <div class="page-heading">
@@ -654,6 +659,7 @@ background:#eee;
               <small> - Profile</small>
               
                 {{>parameter}}
+                
             </h2>
             <p class="lead">{{description}}</p>
           </div>
