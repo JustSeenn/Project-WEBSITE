@@ -144,8 +144,7 @@ exports.read = (id) => {
   exports.isFriend = (idU, idF) => {
     try{
       var isFriend = db.prepare("SELECT * FROM friends where id_u = ? and id_f = ?").get(idU, idF);
-      if(isFriend) return true;
-      else return false;
+      return isFriend == true
     }
     catch{
       console.log(new Error().stack)
@@ -155,8 +154,8 @@ exports.read = (id) => {
 
   exports.addFriend = (idU, idF) => {
     try{
-      var add = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idU, idF);
-      var reverseadd = db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
+      db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idU, idF);
+      db.prepare("INSERT INTO friends (id_u, id_f) VALUES (?, ?)").run(idF, idU);
     }
     catch{
       console.log(new Error().stack)
@@ -224,7 +223,7 @@ exports.read = (id) => {
 
   exports.deleteUser = (id) => {
     try{
-      var id = db.prepare('DELETE FROM user where id = ?').run(id)
+      db.prepare('DELETE FROM user where id = ?').run(id)
     }
     catch{
       console.log(new Error().stack)
@@ -265,8 +264,30 @@ exports.read = (id) => {
     var month = date.getMonth()*1+1
     var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
     var id_u = db.prepare("SELECT id from user where username=?").get(username)
-    var requete = db.prepare("INSERT INTO challenge (accepted,date) values (1,?) where id_f = ? and id_u = ?").run(date1,id_f,id_u)
+    console.log(id_u)
+    var requete = db.prepare("UPDATE challenge set accepted = 1, date=? where id_f = ? and id_u = ?").run(date1,id_f,id_u.id)
     return requete
+  }
+
+  exports.getWinner = (id) => {
+    var count_him = 0
+    var count_me = 0
+    var data_challenge = db.prepare("SELECT id_u as id,date from challenge where id_f = ? and accepted = 1").get(id);
+    if(!data_challenge){
+      var data_challenge = db.prepare("SELECT id_f as id,date from challenge where id_u =? and accepted =1").get(id);
+    }
+    
+    var actions = db.prepare("Select id_a from user_actions where id_u = ? and dates = ?").get(data_challenge.id,data_challenge.date)
+    for(var x of actions){
+        count_him += db.prepare("SELECT points from list_actions where id = ?").get(x).points
+    }
+
+    actions = db.prepare("Select id_a from user_actions where id_u = ? and dates = ?").get(id,data_challenge.date)
+    for(var x of actions){
+        count_me += db.prepare("SELECT points from list_actions where id = ?").get(x)
+    }
+
+    return count_me>=count_him
   }
 
 

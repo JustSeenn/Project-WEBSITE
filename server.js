@@ -44,7 +44,8 @@ app.use(bodyParser.json());
 
 app.use(cookieSession({
   name: 'session',
-  secret: randomstring
+  secret: randomstring,
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
 
@@ -67,6 +68,7 @@ function authenticated(req,res,next){
   return next();
 }
 
+
 function isChallenge(req,res,next){
   console.log("Je rentre isChallenge", req.session.id)
   if(model.isChallenge(req.session.id)){
@@ -74,6 +76,24 @@ function isChallenge(req,res,next){
     res.locals.challenge = true;
   }
   return next();
+}
+function getWinner(req,res,next){
+  try{
+    var date= new Date();
+    var min_initial = parseInt(req.session.dateChallenge.split(":")[1])
+    var hour_initial = parseInt(req.session.dateChallenge.split("/")[1])
+    var day_initial = parseInt(req.session.dateChallenge.split("/")[0])
+    if(day_initial >= date.getDate() && hour_initial >= date.getHours() && min_initial+1 >= date.getMinutes() ){
+      req.session.dateChallenge = null
+      model.getWinner(req.session.id)
+      
+    }
+    return next()
+  }catch{
+    return next();
+  }
+  
+  
 }
 
 function isAdmin(req,res,next){
@@ -107,7 +127,7 @@ function added(req, res, next) {
   return next();
 }
 app.use(added);
-
+app.use(getWinner)
 app.use(authenticated);
 
 
@@ -190,7 +210,7 @@ app.get('/datalist',is_authentificated,(req,res) => {
 
 app.get('/addFriend/:id',is_authentificated,(req,res) => { 
   var id = model.addFriend(req.session.id, req.params.id);
-  if(id=-1){
+  if(id==-1){
     res.redirect('/profil/?info=error')
   }
   res.redirect('/profil_amis/'+req.session.id);
@@ -227,7 +247,7 @@ app.get('/added/:id',is_authentificated,(req, res) => {
   }
   else {
     res.redirect('/profil/?info=action-added')
-  };
+  }
 })
 app.post('/delete_account',(req,res) =>{
   
@@ -264,8 +284,11 @@ app.get('/propose_challenge/:id', (req,res) => {
 })
 
 app.get('/challenge_accepted/:username',(req,res) => {
-  // C'est la que ça devient compliqué
+  
   model.challengeAccepted(req.session.id,req.params.username)
+  var dateChallenge = new Date()
+  req.session.dateChallenge = dateChallenge.getDate() + "/" + dateChallenge.getHours() + ":" + dateChallenge.getMinutes()
+  console.log("into challenge_accepted : ",res.locals.dateChallenge, dateChallenge.getDate() + "/" + dateChallenge.getHours() + ":" + dateChallenge.getMinutes()   )
   res.render('profil',model.read(req.session.id))
 })
 
