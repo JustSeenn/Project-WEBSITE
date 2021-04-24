@@ -290,6 +290,45 @@ exports.read = (id) => {
     return count_me>=count_him
   }
 
+  exports.getContratClause = () => {
+    try{
+      var contratClause = db.prepare("SELECT * FROM contrat").all();
+      return contratClause;
+    }catch{
+      console.log(new Error().stack)
+      return -1
+    }
+  }
+
+  exports.saveData = (id, req_body) => {
+    try{
+      var contratClause = db.prepare("SELECT id, name FROM contrat").all();
+
+      for (let i = 0; i< contratClause.length; i++) {
+        const clause = contratClause[i];
+        var accepted = req_body[clause.name] == "on"
+        db.prepare("INSERT INTO contrat_user (id_u, id_c, accepted) VALUES (?, ?, ?)").run(id,clause.id,accepted.toString());
+
+      }
+      return 0
+    }
+    catch{
+      console.log(new Error().stack)
+      return -1
+    } 
+    
+  }
+
+  exports.dataSaved = (id) => {
+    try{
+      var data = db.prepare("SELECT * FROM contrat_user Where id_u = ?").all(id);
+      return data.length != 0;
+    }catch{
+      console.log(new Error().stack)
+      return -1
+    }
+  }
+
 
 
 

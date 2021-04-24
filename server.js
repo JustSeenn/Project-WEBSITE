@@ -103,6 +103,13 @@ function isAdmin(req,res,next){
   return next();
 }
 
+function isDataSaved (req,res,next){
+  if(model.dataSaved(req.session.id)){
+    res.locals.dataSaved = true;
+  }
+  return next();
+}
+
 function added(req, res, next) {
   const info = {
     'action-added': {type: 'primary', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
@@ -131,8 +138,8 @@ app.use(getWinner)
 app.use(authenticated);
 
 
-app.get('/', (req, res) => {
-  res.render('index',{user : model.allUser(),list_rankActions : model.rankAction(), list_actions : model.allActions()});
+app.get('/',isDataSaved, (req, res) => {
+  res.render('index',{user : model.allUser(),list_rankActions : model.rankAction(), list_actions : model.allActions(), contratClause : model.getContratClause()});
   });
 
 app.get('/register', (req,res) => {
@@ -297,5 +304,15 @@ app.get('/challenge_refused/:id',(req,res) => {
     res.locals.challenge = false
     res.render('profil',model.read(req.session.id))
 })
+
+app.post('/saveData',(req,res) => {
+  var id = model.saveData(req.session.id,req.body);
+  if(id == -1){
+    res.redirect("/?info=invalid-parameter")
+  }
+  else res.redirect("/?info=valid-parameter")
+})
+
+
 app.listen(3000, () => console.log('listening on http://localhost:3000'));
 

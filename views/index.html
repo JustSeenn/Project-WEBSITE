@@ -81,6 +81,13 @@
     <br><br><br><br>
     {{>action}}
   </div>
+  <br><br><br>
+  {{^dataSaved}}
+
+    {{> cookies}}
+
+  {{/dataSaved}}
+  <br><br><br>
   {{/authenticated}}
 
   {{^authenticated}} 
@@ -175,8 +182,7 @@
 </div>
     
   {{/authenticated}}
-  <br><br><br>
-  {{> cookies}}
+  
   <!-- <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br></div> -->
   
   {{> footer}}
