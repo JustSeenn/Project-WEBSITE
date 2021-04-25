@@ -20,7 +20,6 @@ var storage = multer.diskStorage({
     cb(null, 'uploads')
   },
   filename: function (req, file, cb) {
-    //console.log(req)
     cb(null, file.fieldname + '-' + file.originalname)
   }
 })
@@ -70,23 +69,21 @@ function authenticated(req,res,next){
 
 
 function isChallenge(req,res,next){
-  console.log("Je rentre isChallenge", req.session.id)
   if(model.isChallenge(req.session.id)){
-    console.log("isChallenge est valid")
     res.locals.challenge = true;
   }
   return next();
 }
+
 function getWinner(req,res,next){
   try{
     var date= new Date();
     var min_initial = parseInt(req.session.dateChallenge.split(":")[1])
     var hour_initial = parseInt(req.session.dateChallenge.split("/")[1])
     var day_initial = parseInt(req.session.dateChallenge.split("/")[0])
-    if(day_initial >= date.getDate() && hour_initial >= date.getHours() && min_initial+1 >= date.getMinutes() ){
+    if(day_initial <= date.getDate() && hour_initial <= date.getHours() && min_initial+3 <= date.getMinutes() ){
       req.session.dateChallenge = null
-      model.getWinner(req.session.id)
-      
+      var ok = model.getWinner(req.session.id)
     }
     return next()
   }catch{
@@ -112,20 +109,20 @@ function isDataSaved (req,res,next){
 
 function added(req, res, next) {
   const info = {
-    'action-added': {type: 'primary', text: "l'Action a bien été ajouté. l'environnement vous remercie"},
-    'invalid-register' : {type: 'danger', text: 'formulaire mal rempli veuillez recommencez'},
+    'action-added': {type: 'primary', text: "L'action a bien été ajouté. l'environnement vous remercie"},
+    'invalid-register' : {type: 'danger', text: 'Formulaire mal rempli veuillez recommencez'},
     'already-existant' :{type :'danger', text : "Désolé l'action choisis existe déja dans vos actions réalisés"},
-    'invalid-parameter' :{type :'danger', text : "votre modification n'est pas effective pour cause de mauvais parametre"},
-    'valid-parameter' :{type :'success', text : "vos données ont été correctement mis à jour"},
-    'valid-register' :{type :'primary', text : "vous avez été correctement enregistré, l'environnement vous souhaite la bienvenue"},
-    'no-authentify' :{type :'danger', text : "vous ne pouvez effectué cette action car vous n'êtes pas connecté"},
-    'connected' :{type :'info', text : "vous êtes bien connecté"},
-    'not-connected' :{type :'danger', text : "mauvais identifiant de connexion"},
-    'disconnected' :{type :'success', text : "vous avez bien été déconnecté"},
-    'error' :{type :'info', text : "désolé opération impossible pour l'instant réessayer ultérieurement"},
-    'requestSend' :{type :'success', text : "la requete a bien été envoyé"},
-    'actionAdd' :{type :'success', text : "l'action a bien été ajouté"},
-    'refuse' :{type :'info', text : "la requete a bien été refusé"},
+    'invalid-parameter' :{type :'danger', text : "Votre modification n'est pas effective pour cause de mauvais parametre"},
+    'valid-parameter' :{type :'success', text : "Vos données ont été correctement mis à jour"},
+    'valid-register' :{type :'primary', text : "Vous avez été correctement enregistré, l'environnement vous souhaite la bienvenue"},
+    'no-authentify' :{type :'danger', text : "Vous ne pouvez effectué cette action car vous n'êtes pas connecté"},
+    'connected' :{type :'info', text : "Vous êtes bien connecté"},
+    'not-connected' :{type :'danger', text : "Mauvais identifiant de connexion"},
+    'disconnected' :{type :'success', text : "Vous avez bien été déconnecté"},
+    'error' :{type :'info', text : "Désolé opération impossible pour l'instant réessayer ultérieurement"},
+    'requestSend' :{type :'success', text : "La requete a bien été envoyé"},
+    'actionAdd' :{type :'success', text : "L'action a bien été ajouté"},
+    'refuse' :{type :'info', text : "La requete a bien été refusé"},
 
   }
   if(req.query.info && req.query.info in info) {
@@ -168,6 +165,8 @@ app.post('/register', upload.single('avatar') ,function(req,res,next){
     
   })
 
+  
+
  app.get('/login',(req,res) =>{
    res.render('login');
   });
@@ -201,7 +200,9 @@ app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   else{
     res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
     if(res.locals.isFriend == -1) res.redirect('/');
-    else res.render('profil_amis',model.read_friend(req.params.id))
+    else{
+      res.render('profil_amis',model.read_friend(req.params.id))
+    }
   }
   
 })
@@ -232,13 +233,7 @@ app.get('/pictures/*', (req, res) => {
 app.get('/parameter',(req,res) => {
   res.render('parameter',model.read_friend(req.session.id))
 })
-
-app.get('/refuse_Request/:id',(req,res) => {
-  model.removeRequest(req.params.id);
-  res.redirect('/profil/?info=refuse');
-})
-
-app.post('/parameter',is_authentificated,(req,res)=>{
+app.post('/parameter',is_authentificated,(req,res) => {
   var id = model.update(req.session.id,req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.description)
   if(id == -1){
     res.redirect('/profil/?info=invalid-parameter');
@@ -246,8 +241,36 @@ app.post('/parameter',is_authentificated,(req,res)=>{
   res.redirect('/profil/?info=valid-parameter');
 })
 
+app.get("/change_photo", (req,res) => {
+  res.render('change_photo')
+})
+
+app.post("/change_photo", upload.single('avatar') ,function(req,res,next){
+ try{
+  console.log(req.file.originalname)
+  var id = model.update_photo(req.session.id,req.file.originalname)
+  if(id == -1){
+    res.redirect('/profil/?info=invalid-parameter');
+  }
+  res.redirect('/profil/?info=valid-parameter');
+} catch{
+  console.log(new Error().stack)
+  res.redirect('/profil/?info=valid-parameter')
+}
+})
+ 
+
+
+app.get('/refuse_Request/:id',(req,res) => {
+  model.removeRequest(req.params.id);
+  res.redirect('/profil/?info=refuse');
+})
+
+
+
 app.get('/added/:id',is_authentificated,(req, res) => {
-  var id = model.addUserActions(req.params.id, req.session.id);
+    var id = model.addUserActions(req.params.id, req.session.id,req.session.dateChallenge);
+
  
   if(id == -1){
     res.redirect('/profil/?info=already-existant')
@@ -285,8 +308,7 @@ app.post('/add_Action', (req,res) => {
 })
 
 app.get('/propose_challenge/:id', (req,res) => {
-  var addChallenge = model.addChallenge(req.session.id, req.params.id)
-  console.log(addChallenge)
+  model.addChallenge(req.session.id, req.params.id)
   res.render('profil',model.read(req.session.id))
 })
 
@@ -295,7 +317,6 @@ app.get('/challenge_accepted/:username',(req,res) => {
   model.challengeAccepted(req.session.id,req.params.username)
   var dateChallenge = new Date()
   req.session.dateChallenge = dateChallenge.getDate() + "/" + dateChallenge.getHours() + ":" + dateChallenge.getMinutes()
-  console.log("into challenge_accepted : ",res.locals.dateChallenge, dateChallenge.getDate() + "/" + dateChallenge.getHours() + ":" + dateChallenge.getMinutes()   )
   res.render('profil',model.read(req.session.id))
 })
 

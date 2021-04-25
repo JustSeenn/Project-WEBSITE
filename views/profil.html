@@ -649,14 +649,13 @@ background:#eee;
     <!-- Begin .page-heading -->
     <div class="page-heading">
         <div class="media clearfix">
-          <div class="media-left pr30">
-            <a>
-              <img class="be6sR" src="/uploads/avatar-{{avatar}}" style=border-radius:20px width="120" height="120" alt="...">  <!--Repertoir static public-->
-            </a>
-          </div>                      
+          <div class="media-left">
+            <img class="be6sR" src="/uploads/avatar-{{avatar}}" style=border-radius:20px width="120" height="120" alt="..." data-bs-toggle="modal" data-bs-target="#staticphoto">  <!--Repertoir static public-->
+          </div>
+               
           <div class="media-body va-m">
             <h2 class="media-heading">{{firstname}} {{lastname}}
-              <small> - Profile</small>
+              <small> - Profil</small>
               
                 {{>parameter}}
                 
@@ -664,8 +663,9 @@ background:#eee;
             <p class="lead">{{description}}</p>
           </div>
         </div>
+        
     </div>
-
+    {{>change_photo}}   
     <div class="row">
         <div class="col-md-4">
           <div class="panel">
@@ -673,7 +673,7 @@ background:#eee;
               <span class="panel-icon">
                 <i class="fa fa-star"></i>
               </span>
-              <span class="panel-title"> User Popularity</span>
+              <span class="panel-title"> Popularité de l'utilisateur </span>
             </div>
             <div class="panel-body pn">
               <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
@@ -712,7 +712,7 @@ background:#eee;
               <span class="panel-icon">
                 <i class="fa fa-pencil"></i>
               </span>
-              <span class="panel-title">Friends</span>
+              <span class="panel-title">Amis</span>
             </div>
             <div class="pre-scrollable">
               {{#friends_name}}
@@ -758,7 +758,7 @@ background:#eee;
               <div id="tab1" class="tab-pane active">
                 <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
                   <thead> 
-                      <th> User </th>
+                      <th> Utilisateur </th>
                       <th> Description</th>
                       <th> Points</th>
                   </thead>
@@ -770,8 +770,8 @@ background:#eee;
                       <td>
                         <input type="text" name="point_request">
                         <input type ="hidden" name="request_id" value={{id}}>
-                        <button class="btn btn-success" type="submit">accept</button>
-                        <a class="btn btn-danger" href="/refuse_Request/{{id}}" role="button">Refuse</a>
+                        <button class="btn btn-success" type="submit">Accepter</button>
+                        <a class="btn btn-danger" href="/refuse_Request/{{id}}" role="button">Refuser</a>
                       </td>
                     </tr>
                   </form>

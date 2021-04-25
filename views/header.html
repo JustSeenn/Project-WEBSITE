@@ -12,7 +12,7 @@
       <div>
         {{#authenticated}}
         <a href="/profil" class="btn btn-dark">Profil</a>
-        <a href="/logout" class="btn btn-danger"> LOGOUT </a>
+        <a href="/logout" class="btn btn-danger"> DECONNEXION </a>
         {{name}}
         {{/authenticated}}
        {{^authenticated}}
@@ -21,7 +21,7 @@
         <form action="/login" method="post" class="form-inline">
           <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username" aria-label="Username">
           <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password" aria-label="Password">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Connexion</button>
         </form>
       </div>
     </nav>

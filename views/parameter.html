@@ -18,9 +18,13 @@
     
        <div class="modal-body">    
         <form action="/parameter" method="post">
+               
+
+
+              
                 <div class="form-group-row">
                   <div class="form-group col">
-                    <label for="recipient-name" class="col-form-label">Firstname</label>
+                    <label for="recipient-name" class="col-form-label">Prénom</label>
                     <input type="text" class="form-control" id="inputName3" name="firstname" value="{{firstname}}">
 
                   </div>
@@ -30,7 +34,7 @@
                 </div>
                 <div class="form-group-row">
                   <div class="form-group col">
-                    <label for="recipient-name" class="col-form-label">LastName</label>
+                    <label for="recipient-name" class="col-form-label">Nom</label>
                     <input type="text" class="form-control" id="inputName3" name="lastname" value="{{lastname}}">
                   </div>
                     
@@ -38,14 +42,14 @@
                   </div>
                 <div class="form-group-row">
                   <div class="form-group col">
-                    <label for="recipient-name" class="col-form-label">Username</label>
+                    <label for="recipient-name" class="col-form-label">Nom d'utilisateur</label>
                   <input type="text" class="form-control" id="inputUsername3" name="username" value="{{username}}">
                   </div>
                   
                 </div>
                 <div class="form-group-row">
                   <div class="form-group col">
-                    <label for="recipient-name" class="col-form-label">Bio</label>
+                    <label for="recipient-name" class="col-form-label">Description</label>
                       <input type="textarea" class="form-control" id="inputBio3" name="description" value="{{description}}">
                     
                   </div>
@@ -69,19 +73,17 @@
                   </div>
                 </div> 
         </form>
-        <form action='/delete_account'method="POST">
-        <button type="submit" class="btn btn-danger"> Supprimer votre compte</button>
-        </form>
-        
+        <a href="/change_photo">modifier la photo de profil</a>
         
             
             
             
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
 </div>
+
 

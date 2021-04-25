@@ -1,0 +1,36 @@
+<!-- Button trigger modal -->
+
+<!-- <i class="fa fa-cog" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#staticphoto" style="height:10px; width:10px"></i> -->
+
+<i aria-hidden="true" data-bs-toggle="modal" data-bs-target="#staticphoto" style="height:10px; width:10px"></i>
+
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="staticphoto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="parameterModalLabel">Modifier le profil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fa fa-times" aria-hidden="true"></i>
+
+        </button>
+      </div>
+    
+       <div class="modal-body">   
+
+      <form action="/change_photo" method="post"  enctype="multipart/form-data">    
+            <div class="form-group">
+                <a href="#" id="fileSelect">Sélectionnez des fichiers</a>
+
+                <input class="form-control" id="fileElem" type="file" name="avatar" accept='image/png, image/jpeg' onchange="handleFiles(this.files)" />
+
+                <div id="fileList">
+                <p>Aucun fichier sélectionné !</p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier la photo de profil</button>
+      </form>
+    </div>
+    </div>
+</div></div></div>

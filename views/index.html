@@ -53,7 +53,7 @@
   <div class="container">
     <div class="row">
       <div class="col text-center">
-        <h2 style="text-decoration: underline; font-family: 'Times New Roman', Times, serif;">WorldWide Ranking Action</h2>
+        <h2 style="text-decoration: underline; font-family: 'Times New Roman', Times, serif;">Exemples Action</h2>
         <ul class="list-group">
           {{#list_rankActions}}
           <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -64,7 +64,7 @@
         </ul>
       </div>
       <div class="col text-center">
-        <h2 style = "text-decoration: underline;font-family: 'Times New Roman', Times, serif;">WorldWide Ranking Player</h2>
+        <h2 style = "text-decoration: underline;font-family: 'Times New Roman', Times, serif;">Classement des meilleurs joueur</h2>
         <div class="list-group list-group-flush justify-content-end">
           <ol>
             {{#user}}
@@ -101,23 +101,23 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           
-            <label for="inputUsername4">Username</label>
+            <label for="inputUsername4">Nom d'utilisateur</label>
             <input type="text" class="form-control" id="inputUsername4" name="username" placeholder="Username">
           
         </div>
         <div class="form-group col-md-6">
-          <label for="inputPassword4">Password</label>
+          <label for="inputPassword4">Mot de passe</label>
           <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Password">
         </div>
       </div>
       <div class="form-row">
         
         <div class="form-group col-md-6">
-          <label for="inputFirstName4">FirstName</label>
+          <label for="inputFirstName4">Prenom</label>
           <input type="text" class="form-control" id="inputUsername4" name="firstname" placeholder="Username">
         </div>
         <div class="form-group col-md-6">
-          <label for="inputLastName4">LastName</label>
+          <label for="inputLastName4">Nom</label>
           <input type="text" class="form-control" id="inputPassword4" name="lastname" placeholder="Password">
         </div>
       </div>
@@ -140,16 +140,16 @@
     
       <div class="form-group">
     
-        <label for="inputAddress">Address</label>
+        <label for="inputAddress">Addresse</label>
         <input type="text" class="form-control" id="inputAddress" name="adress" placeholder="1234 Main St">
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="inputCity">City</label>
+          <label for="inputCity">Ville</label>
           <input type="text" class="form-control" name="city" id="inputCity">
         </div>
         <div class="form-group col-md-4">
-          <label for="inputState">Country</label>
+          <label for="inputState">Pays</label>
           
           <input type="text" class="form-control" id="myInput" name="myCountry" placeholder="Country">
         
@@ -157,15 +157,15 @@
       
       </div>
       <div class="form-row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-12">
           <label for="inputState">Description</label>
           
-          <input type="textarea" class="form-control" id="myDescritpion" name="description">
+          <input type="text" class="form-control" id="myDescritpion" name="description">
       
         </div>
       
       </div>
-      <button type="submit" class="btn btn-primary">Sign in</button>
+      <button type="submit" class="btn btn-primary">S'enregistrer</button>
       
     
     </form>
@@ -183,11 +183,10 @@
     
   {{/authenticated}}
   
-  <!-- <div style="background-image: url('https://image.freepik.com/vecteurs-libre/banniere-ecologique-doodles_105325-196.jpg');"><br><br></div> -->
   
-  {{> footer}}
+  
 
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous">
 
     function handleFiles(files) {
         if (!files.length) {

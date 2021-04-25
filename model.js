@@ -35,8 +35,9 @@ exports.login = (username,password) => {
   }
 };
 
-exports.read = (id) => {
+exports.read = (id,dateChallenge) => {
     try{
+      console.log(dateChallenge)
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
 
@@ -61,6 +62,9 @@ exports.read = (id) => {
 
       var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
       found.points = points.points;
+
+      
+      
 
       var requete = db.prepare('SELECT r.id, r.description, u.username FROM requete r INNER JOIN user u on u.id = r.id_u;').all();
       found.requete = requete;
@@ -166,7 +170,7 @@ exports.read = (id) => {
 
   exports.update = (id,username,firstname,lasname,email,description) =>{
     try{
-      var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,id)
+      var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,avatar,id)
       return id;
     }
     catch{
@@ -175,17 +179,43 @@ exports.read = (id) => {
     }
   }
 
-  exports.addUserActions = (idA,idU) => {
+  exports.update_photo= (id,avatar) => {
     try{
+      var id = db.prepare("update user set avatar= ? WHERE id = ?").run(avatar,id)
+      return id;
+    }
+    catch{
+      console.log(new Error().stack)
+      return -1
+    }
+  }
+
+  exports.addUserActions = (idA,idU,dateChallenge) => {
+    // try{
+      console.log("DateChallenge = ", dateChallenge)
       var date =  new Date();
       var month = date.getMonth()*1+1
       var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
       var id = db.prepare('INSERT INTO user_actions (id_u, id_a, dates) VALUES (?, ?, ?)').run(idU, idA, date1);
+      
+      
+      if(dateChallenge){
+        console.log("Je rentre dans dateChallenge")
+        var points = db.prepare('select points from list_actions where id = ?').get(idA)
+        var id_u =  db.prepare("SELECT id_u from challenge where id_f=? and accepted=1").get(idU);
+        console.log(points,id_u)
+        if(id_u){
+          db.prepare("UPDATE challenge set points_f = ? where id_f = ? and accepted = 1").run(points.points,idU)    
+        }else{
+          db.prepare("UPDATE challenge set points_u = ?  where id_u = ? and accepted = 1").run(points.points,idU)
+        }
+        
+      }
       return id;
-    }catch{
-      console.log(new Error().stack)
-      return -1;
-    }
+    // }catch{
+    //   console.log(new Error().stack)
+    //   return -1;
+    // }
   }
 
   exports.addAction = (description, point) => {
@@ -264,30 +294,26 @@ exports.read = (id) => {
     var month = date.getMonth()*1+1
     var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
     var id_u = db.prepare("SELECT id from user where username=?").get(username)
-    console.log(id_u)
     var requete = db.prepare("UPDATE challenge set accepted = 1, date=? where id_f = ? and id_u = ?").run(date1,id_f,id_u.id)
     return requete
   }
 
   exports.getWinner = (id) => {
-    var count_him = 0
-    var count_me = 0
-    var data_challenge = db.prepare("SELECT id_u as id,date from challenge where id_f = ? and accepted = 1").get(id);
-    if(!data_challenge){
-      var data_challenge = db.prepare("SELECT id_f as id,date from challenge where id_u =? and accepted =1").get(id);
-    }
-    
-    var actions = db.prepare("Select id_a from user_actions where id_u = ? and dates = ?").get(data_challenge.id,data_challenge.date)
-    for(var x of actions){
-        count_him += db.prepare("SELECT points from list_actions where id = ?").get(x).points
-    }
+    //id_u or id_f ? 
+    console.log("Je rentre dans getWinner")
+    var id_u = db.prepare("Select * from challenge where id_u = ? and accepted =1").get(id)
+    if(id_u){
+      var count_me = id_u.points_u
+      var count_him = id_u.points_f
+      db.prepare("Update into challenge set accepted = 0 where id_u = ?").run(id_f)
+    }else{
+      var id_f = db.prepare("SELECT * from challenge where id_f = ? and accepted = 1").get(id)
+      var count_me = id_f.points_f
+      var count_him = id_f.points_u
+      db.prepare("Update into challenge set accepted = 0 where id_f = ?").run(id_f)
 
-    actions = db.prepare("Select id_a from user_actions where id_u = ? and dates = ?").get(id,data_challenge.date)
-    for(var x of actions){
-        count_me += db.prepare("SELECT points from list_actions where id = ?").get(x)
     }
-
-    return count_me>=count_him
+    return count_me >= count_him
   }
 
   exports.getContratClause = () => {
