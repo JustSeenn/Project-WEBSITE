@@ -102,23 +102,23 @@
         <div class="form-group col-md-6">
           
             <label for="inputUsername4">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="inputUsername4" name="username" placeholder="Username">
+            <input type="text" class="form-control" id="inputUsername4" name="username" placeholder="Nom d'utilisateur">
           
         </div>
         <div class="form-group col-md-6">
           <label for="inputPassword4">Mot de passe</label>
-          <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Password">
+          <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="Mot de passe">
         </div>
       </div>
       <div class="form-row">
         
         <div class="form-group col-md-6">
           <label for="inputFirstName4">Prenom</label>
-          <input type="text" class="form-control" id="inputUsername4" name="firstname" placeholder="Username">
+          <input type="text" class="form-control" id="inputUsername4" name="firstname" placeholder="Prenom">
         </div>
         <div class="form-group col-md-6">
           <label for="inputLastName4">Nom</label>
-          <input type="text" class="form-control" id="inputPassword4" name="lastname" placeholder="Password">
+          <input type="text" class="form-control" id="inputPassword4" name="lastname" placeholder="Nom">
         </div>
       </div>
       
@@ -146,12 +146,12 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputCity">Ville</label>
-          <input type="text" class="form-control" name="city" id="inputCity">
+          <input type="text" class="form-control" name="city" id="inputCity" placeholder="Ville">
         </div>
         <div class="form-group col-md-4">
           <label for="inputState">Pays</label>
           
-          <input type="text" class="form-control" id="myInput" name="myCountry" placeholder="Country">
+          <input type="text" class="form-control" id="myInput" name="myCountry" placeholder="Pays">
         
         </div>
       
@@ -182,12 +182,10 @@
 </div>
     
   {{/authenticated}}
+  {{>footer}}
   
-  
-  
-
   <script>
-    document.getElementById("modalButton").click()
+
     function handleFiles(files) {
         if (!files.length) {
           fileList.innerHTML = "<p>Aucun fichier sélectionné !</p>";
@@ -347,4 +345,3 @@
     /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
     autocomplete(document.getElementById("myInput"), countries);
     </script>
-    {{>footer}}

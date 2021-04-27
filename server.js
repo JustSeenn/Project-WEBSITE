@@ -200,7 +200,6 @@ app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   if(req.params.id == req.session.id) res.redirect('/profil');
   else{
     res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
-    console.log(res.locals.isFriend)
     if(res.locals.isFriend == -1) res.redirect('/');
     else{
       res.render('profil_amis',model.read_friend(req.params.id))
@@ -209,6 +208,13 @@ app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   
 })
 
+app.get('/profil/removeFriends/:id',is_authentificated,(req,res) => {
+  var id = model.removeFriend(req.session.id, req.params.id);
+  if(id==-1){
+    res.redirect('/profil/?info=error')
+  }
+  res.redirect('/profil/?info=removeFriend');
+})
 app.get('/removeFriends/:id',is_authentificated,(req,res) => {
   var id = model.removeFriend(req.session.id, req.params.id);
   if(id==-1){
@@ -240,9 +246,11 @@ app.get('/uploads/*', (req, res) => {
 app.get('/pictures/*', (req, res) => {
   res.sendFile(req.url, {root: './'})
 });
+
 app.get('/parameter',(req,res) => {
   res.render('parameter',model.read_friend(req.session.id))
 })
+
 app.post('/parameter',is_authentificated,(req,res) => {
   var id = model.update(req.session.id,req.body.username,req.body.firstname,req.body.lastname,req.body.email, req.body.description)
   if(id == -1){
@@ -257,7 +265,6 @@ app.get("/change_photo", (req,res) => {
 
 app.post("/change_photo", upload.single('avatar') ,function(req,res,next){
  try{
-  console.log(req.file.originalname)
   var id = model.update_photo(req.session.id,req.file.originalname)
   if(id == -1){
     res.redirect('/profil/?info=invalid-parameter');

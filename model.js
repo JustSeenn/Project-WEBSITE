@@ -1,6 +1,5 @@
 "use strict"
 const Sqlite = require('better-sqlite3');
-//const { count } = require('node:console');
 let db = new Sqlite('db.sqlite');
 
 
@@ -8,7 +7,11 @@ let db = new Sqlite('db.sqlite');
 exports.new_user = (username ,firstname , lastname , email,adress,password , avatar, description) => {
   try{
     var date =  new Date();
-    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date.getDate()}).lastInsertRowid;
+    var day = date.getDate();
+    var month = date.getMonth() +1
+    var year = date.getFullYear()
+    var date1 = day + "/" + month + "/" + year
+    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date1}).lastInsertRowid;
     return id;
   }catch{
     console.log(new Error().stack)
@@ -37,7 +40,6 @@ exports.login = (username,password) => {
 
 exports.read = (id,dateChallenge) => {
     try{
-      console.log(dateChallenge)
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
 
@@ -51,7 +53,6 @@ exports.read = (id,dateChallenge) => {
       if(this.isChallenge(id)){
         var id_u = db.prepare("SELECT id_u from challenge where id_f=?").get(id)
         found.challenge_name = db.prepare("select username from user where id = ?").get(id_u.id_u).username
-        console.log(found.challenge_name)
       }
       found.friends_name = tab;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
@@ -170,7 +171,7 @@ exports.read = (id,dateChallenge) => {
 
   exports.update = (id,username,firstname,lasname,email,description) =>{
     try{
-      var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,avatar,id)
+      var id = db.prepare("update user set username = ?,  firstname = ?, lastname = ?, email = ?, description = ? WHERE id = ?").run(username,firstname,lasname,email,description,id)
       return id;
     }
     catch{
@@ -192,7 +193,6 @@ exports.read = (id,dateChallenge) => {
 
   exports.addUserActions = (idA,idU,dateChallenge) => {
     // try{
-      console.log("DateChallenge = ", dateChallenge)
       var date =  new Date();
       var month = date.getMonth()*1+1
       var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
@@ -200,10 +200,8 @@ exports.read = (id,dateChallenge) => {
       
       
       if(dateChallenge){
-        console.log("Je rentre dans dateChallenge")
         var points = db.prepare('select points from list_actions where id = ?').get(idA)
         var id_u =  db.prepare("SELECT id_u from challenge where id_f=? and accepted=1").get(idU);
-        console.log(points,id_u)
         if(id_u){
           db.prepare("UPDATE challenge set points_f = ? where id_f = ? and accepted = 1").run(points.points,idU)    
         }else{
@@ -212,10 +210,7 @@ exports.read = (id,dateChallenge) => {
         
       }
       return id;
-    // }catch{
-    //   console.log(new Error().stack)
-    //   return -1;
-    // }
+   
   }
 
   exports.addAction = (description, point) => {
@@ -244,7 +239,6 @@ exports.read = (id,dateChallenge) => {
   exports.removeFriend = (idU,idF) => {
     try{
       db.prepare("DELETE FROM friends WHERE id_u = ? and id_f = ?").run(idU, idF);
-      console.log(idU,idF)
       db.prepare("DELETE FROM friends WHERE id_u = ? and id_f = ?").run(idF, idU);
     }
     catch{
@@ -302,7 +296,6 @@ exports.read = (id,dateChallenge) => {
   }
 
   exports.challengeAccepted = (id_f,username) => {
-    console.log(id_f, username)
     var date = new Date();
     var month = date.getMonth()*1+1
     var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
@@ -313,17 +306,16 @@ exports.read = (id,dateChallenge) => {
 
   exports.getWinner = (id) => {
     //id_u or id_f ? 
-    console.log("Je rentre dans getWinner")
     var id_u = db.prepare("Select * from challenge where id_u = ? and accepted =1").get(id)
     if(id_u){
       var count_me = id_u.points_u
       var count_him = id_u.points_f
-      db.prepare("Update into challenge set accepted = 0 where id_u = ?").run(id_f)
+      db.prepare("Update  challenge set accepted = 0 where id_u = ?").run(id_f)
     }else{
       var id_f = db.prepare("SELECT * from challenge where id_f = ? and accepted = 1").get(id)
       var count_me = id_f.points_f
       var count_him = id_f.points_u
-      db.prepare("Update into challenge set accepted = 0 where id_f = ?").run(id_f)
+      db.prepare("Update  challenge set accepted = 0 where id_f = ?").run(id_f)
 
     }
     return count_me >= count_him
@@ -331,6 +323,7 @@ exports.read = (id,dateChallenge) => {
 
   exports.getContratClause = () => {
     try{
+
       var contratClause = db.prepare("SELECT * FROM contrat").all();
       return contratClause;
     }catch{

@@ -8,7 +8,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Contrat de cookie</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="/saveData" method="POST">
@@ -16,15 +16,15 @@
         Cochez les cases que vous souhaitez accepter ou non concernant les cookies. Nous adapterons en fonction votre expérience pour que vous ne soyez en aucun cas pénalisé.
         <br><br>
         {{#contratClause}}
-          <div class="form-check form-switch">
+          <div class="form-check form-switch" style="margin-left: 5%;">
             <input class="form-check-input" name ="{{name}}" type="checkbox" id="flexSwitchCheckChecked" checked>
             <label class="form-check-label" for="flexSwitchCheckChecked">{{descriptions}}</label>
           </div>
         {{/contratClause}}  
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Signed</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
       </div>
       </form>
     </div>
