@@ -58,7 +58,7 @@ exports.read = (id,dateChallenge) => {
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id)
       found.count_friends = count_friends.count; 
       
-      var actions = db.prepare('SELECT descriptions,points,dates FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
+      var actions = db.prepare('SELECT descriptions,points,dates FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ? order by dates DESC;').all(id)
       found.action = actions;
 
       var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
