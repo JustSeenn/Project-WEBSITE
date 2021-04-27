@@ -123,6 +123,7 @@ function added(req, res, next) {
     'requestSend' :{type :'success', text : "La requete a bien été envoyé"},
     'actionAdd' :{type :'success', text : "L'action a bien été ajouté"},
     'refuse' :{type :'info', text : "La requete a bien été refusé"},
+    'removeFriend' :{type :'success', text : "votre ami a bien été supprimé"},
 
   }
   if(req.query.info && req.query.info in info) {
@@ -199,12 +200,21 @@ app.get('/profil_amis/:id',is_authentificated,(req,res) =>{
   if(req.params.id == req.session.id) res.redirect('/profil');
   else{
     res.locals.isFriend = model.isFriend(req.session.id, req.params.id);
+    console.log(res.locals.isFriend)
     if(res.locals.isFriend == -1) res.redirect('/');
     else{
       res.render('profil_amis',model.read_friend(req.params.id))
     }
   }
   
+})
+
+app.get('/removeFriends/:id',is_authentificated,(req,res) => {
+  var id = model.removeFriend(req.session.id, req.params.id);
+  if(id==-1){
+    res.redirect('/profil/?info=error')
+  }
+  res.redirect('/profil/?info=removeFriend');
 })
 
 app.get('/logout',is_authentificated,(req,res)=>{

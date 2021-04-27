@@ -148,7 +148,7 @@ exports.read = (id,dateChallenge) => {
   exports.isFriend = (idU, idF) => {
     try{
       var isFriend = db.prepare("SELECT * FROM friends where id_u = ? and id_f = ?").get(idU, idF);
-      return isFriend == true
+      return isFriend != undefined
     }
     catch{
       console.log(new Error().stack)
@@ -233,6 +233,18 @@ exports.read = (id,dateChallenge) => {
     try{
       var requete = db.prepare('INSERT INTO requete (id_u,description) VALUES (?, ?)').run(idU, description);
       return requete;
+    }
+    catch{
+      console.log(new Error().stack)
+      return -1;
+    }
+  }
+
+  exports.removeFriend = (idU,idF) => {
+    try{
+      db.prepare("DELETE FROM friends WHERE id_u = ? and id_f = ?").run(idU, idF);
+      console.log(idU,idF)
+      db.prepare("DELETE FROM friends WHERE id_u = ? and id_f = ?").run(idF, idU);
     }
     catch{
       console.log(new Error().stack)

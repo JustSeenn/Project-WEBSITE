@@ -643,139 +643,110 @@ border-top: 1px solid #FFF;
 <section id="content" class="container-sm">
   <!-- Begin .page-heading -->
   <div class="page-heading">
-      <div class="media clearfix">
-        <div class="media-left pr30">
-          <a>
-            <img class="be6sR" src="/uploads/avatar-{{avatar}}" style=border-radius:20px width="120" height="120" alt="...">  <!--Repertoir static public-->
-          </a>
-        </div>                      
-        <div class="media-body va-m">
-          <h2 class="media-heading">{{firstname}} {{lastname}}
-            <small> - Profile</small>
-            
-              {{>parameter}}
-          </h2>
-          <p class="lead">{{description}}</p>
-        </div>
+    <div class="media clearfix">
+      <div class="media-left pr30">
+        <a>
+          <img class="be6sR" src="/uploads/avatar-{{avatar}}" style=border-radius:20px width="120" height="120" alt="...">  <!--Repertoir static public-->
+        </a>
+      </div>                      
+      <div class="media-body va-m">
+        <h2 class="media-heading">{{firstname}} {{lastname}}
+          <small> - Profile</small>
+          {{>parameter}}
+        </h2>
+        <p class="lead">{{description}}</p>
       </div>
+    </div>
   </div>
 
   <div class="row">
-      <div class="col-md-4">
-        <div class="panel">
-          <div class="panel-heading">
-            <span class="panel-icon">
-              <i class="fa fa-star"></i>
-            </span>
-            <span class="panel-title">Popularité de l'utilisateur </span>
-          </div>
-          <div class="panel-body pn">
-            <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
-              
-              <tbody>
-                <tr>
-                  <td>
-                    <span class="fa fa-trophy text-warning"></span>
-                  </td>
-                  <td>Points</td>
-                  <td>{{points}}</td>
-                </tr>
-                <tr>
-                  <td>
-                    <span class="fa fa-newspaper-o text-primary"></span>
-                  </td>
-                  <td>Membre depuis</td>
-                  <td>
-                    {{date}} jours</td>
-                </tr>
+    <div class="col-md-4">
+      <div class="panel">
+        <div class="panel-heading">
+          <span class="panel-icon">
+            <i class="fa fa-star"></i>
+          </span>
+          <span class="panel-title"> User Popularity</span>
+        </div>
+        <div class="panel-body pn">
+          <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+            <tbody>
+              <tr>
+                <td>
+                  <span class="fa fa-trophy text-warning"></span>
+                </td>
+                <td>Points</td>
+                <td>{{points}}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="fa fa-newspaper-o text-primary"></span>
+                </td>
+                <td>Membre depuis</td>
+                <td>
+                  {{date}} jours</td>
+              </tr>
+              {{#isFriend}}
                 <tr>
                   <td>
                     <span class="fa fa-users text-info"></span>
                   </td>
                   <td>Nombre d'amis</td>
                   <td>
-                    {{count_friends}}</td>
+                    {{count_friends}}
+                  </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
+              {{/isFriend}}
+              {{^isFriend}}
+                <tr>
+                  <td>
+                    <a href="/addFriend/{{id}}" class="btn btn-primary btn-sm"> Add Friend </a>
+                  </td>
+                </tr>
+              {{/isFriend}}
+            </tbody>
+          </table>
         </div>
-        
-        <div class="panel">
-          <div class="panel-heading">
-            <span class="panel-icon">
-              <i class="fa fa-pencil"></i>
-            </span>
-            <span class="panel-title">Défis proposés</span>
-          </div>
-          <div class="pre-scrollable">
-            
-              <div class="card text-white bg-dark mb-3 text-center">
-                  <div class="card-body text-center">
-                  <a href="/propose_challenge/{{id}}" class="btn btn-light">Proposer un défis</a>
-
-                  </div>
-              </div>
-            
-            
-              
+      </div>       
+      <div class="panel">
+        <div class="panel-heading">
+          <span class="panel-icon">
+            <i class="fa fa-pencil"></i>
+          </span>
+          <span class="panel-title">Défis proposés</span>
+        </div>
+        <div class="pre-scrollable">
+          <div class="card text-white bg-dark mb-3 text-center">
+            <div class="card-body text-center">
+              <a href="/propose_challenge/{{id}}" class="btn btn-light">Proposer un défis</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-8">
-
-        <div class="tab-block">
-          <div class="tab-content p30" style="height: 730px;">
-            <div id="tab1" class="tab-pane active">
-              <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
-                <thead> 
-                    <th> Actions réalisés</th>
-                    <th> Date</th>
-                    <th> Nombres de points rapporté</th>
-                </thead>
-                {{#action}}
+    </div>
+    <div class="col-md-8">
+      <div class="tab-block">
+        <div class="tab-content p30" style="height: 730px;">
+          <div id="tab1" class="tab-pane active">
+            <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+              <thead> 
+                <th> Actions réalisés</th>
+                <th> Date</th>
+                <th> Nombres de points rapporté</th>
+              </thead>
+              {{#action}}
                 <tr>
                   <td>{{descriptions}}</td>
                   <td>{{dates}}</td>
                   <td><i class="fa fa-caret-up text-info pr10"></i> {{points}} points</td>
                 </tr>
-                {{/action}}
-              </table>
-            </div>
+              {{/action}}
+            </table>
           </div>
         </div>
-        <br><br>
-        {{#admin}}
-        <div class="tab-block">
-          <div class="tab-content p30" style="height: 730px;">
-            <div id="tab1" class="tab-pane active">
-              <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
-                <thead> 
-                    <th> Utilisateur </th>
-                    <th> Description</th>
-                    <th> Points</th>
-                </thead>
-                {{#requete}}
-                <form action="/add_Action" method="POST">
-                  <tr>
-                    <td >{{username}}</td>
-                    <td><input name = "description_request" value="{{description}}" readonly></td>
-                    <td>
-                      <input type="text" name="point_request">
-                      <input type ="hidden" name="request_id" value={{id}}>
-                      <button class="btn btn-success" type="submit">Accepter</button>
-                      <a class="btn btn-danger" href="/refuse_Request/{{id}}" role="button">Refuser</a>
-                    </td>
-                  </tr>
-                </form>
-                {{/requete}}
-              </table>
-            </div>
-          </div>
-        </div>
-        {{/admin}}
       </div>
     </div>
+  </div>
     
 </section>
 
