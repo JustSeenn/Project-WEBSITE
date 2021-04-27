@@ -233,6 +233,7 @@ exports.read = (id,dateChallenge) => {
     try{
       var requete = db.prepare('INSERT INTO requete (id_u,description) VALUES (?, ?)').run(idU, description);
       return requete;
+
     }
     catch{
       console.log(new Error().stack)
