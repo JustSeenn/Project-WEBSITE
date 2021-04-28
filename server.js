@@ -6,7 +6,7 @@ const multer = require('multer');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const _ = require('lodash');
-
+const port = process.env.PORT || 3000;
 var randomstring = Math.random().toString(36).slice(-15);
 
 app.use(express.static('PROJET_WEB_S4'));
