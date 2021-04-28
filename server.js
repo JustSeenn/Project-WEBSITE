@@ -6,6 +6,7 @@ const multer = require('multer');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const _ = require('lodash');
+
 const port = process.env.PORT || 3000;
 var randomstring = Math.random().toString(36).slice(-15);
 
@@ -46,6 +47,7 @@ app.use(cookieSession({
   secret: randomstring,
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+
 
 
 function is_authentificated(req, res, next) {
@@ -319,8 +321,10 @@ app.post('/add_request', (req,res) => {
 })
 
 app.post('/add_Action', (req,res) => {
-  model.addAction(req.body.description_request,req.body.point_request);
+  var action = model.addAction(req.body.description_request,req.body.point_request);
   model.removeRequest(req.body.request_id);
+  console.log(action,req.body.user_id)
+  model.addUserActions(action.id,req.body.user_id,undefined)
   res.redirect('/datalist/?info=actionAdd')
 })
 

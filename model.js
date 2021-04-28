@@ -1,7 +1,15 @@
 "use strict"
 const Sqlite = require('better-sqlite3');
 let db = new Sqlite('db.sqlite');
+var bcrypt = require('bcrypt');
 
+function crypt_password(password) {
+  var saved_hash = bcrypt.hashSync(password,10);
+  return saved_hash;
+}
+function compare_password(password, saved_hash) {
+  return bcrypt.compareSync(password, saved_hash)==true;
+};
 
 
 exports.new_user = (username ,firstname , lastname , email,adress,password , avatar, description) => {
@@ -11,7 +19,8 @@ exports.new_user = (username ,firstname , lastname , email,adress,password , ava
     var month = date.getMonth() +1
     var year = date.getFullYear()
     var date1 = day + "/" + month + "/" + year
-    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,date:date1}).lastInsertRowid;
+    var pass = crypt_password(password)
+    var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description,  @date )').run({username:username,firstname:firstname, lastname:lastname,password:pass,email:email,adress:adress,avatar:avatar,description:description,date:date1}).lastInsertRowid;
     return id;
   }catch{
     console.log(new Error().stack)
@@ -19,16 +28,14 @@ exports.new_user = (username ,firstname , lastname , email,adress,password , ava
   }
     
   
-        /*var date =  new Date();
-        var id = db.prepare('INSERT INTO user (username,firstname,lastname,email,adress,password,avatar,description,points,date) VALUES ( @username, @firstname, @lastname,@email, @adress,@password, @avatar, @description, @points, @date )').run({username:username,firstname:firstname, lastname:lastname,password:password,email:email,adress:adress,avatar:avatar,description:description,points:0,date:date.getDate()}).lastInsertRowid;
-        return id;
-      return -1;
-    }*/
-  }
+}
 
 exports.login = (username,password) => {
   try{
-    var authen = db.prepare('SELECT id from user where username = ? and password = ?').get(username,password);
+    var saved_hash = db.prepare('SELECT password from user where username = ?').get(username).password
+    if(compare_password(password,saved_hash)){
+      var authen = db.prepare('SELECT id from user where username = ?').get(username);
+    }
     if(!authen) return -1;
     return authen;
   }
@@ -39,7 +46,7 @@ exports.login = (username,password) => {
 };
 
 exports.read = (id,dateChallenge) => {
-    try{
+     try{
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var friend = db.prepare('SELECT id_f as id FROM friends WHERE id_u = ?').all(id) 
 
@@ -67,7 +74,7 @@ exports.read = (id,dateChallenge) => {
       
       
 
-      var requete = db.prepare('SELECT r.id, r.description, u.username FROM requete r INNER JOIN user u on u.id = r.id_u;').all();
+      var requete = db.prepare('SELECT r.id, r.description, u.username, u.id as id_u FROM requete r INNER JOIN user u on u.id = r.id_u;').all();
       found.requete = requete;
 
       return found;
@@ -84,7 +91,7 @@ exports.read = (id,dateChallenge) => {
       var found = db.prepare('SELECT * FROM user WHERE id = ?').get(id);
       var points = db.prepare('SELECT ifnull(sum(points),0) as points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').get(id)
       found.points = points.points;
-      var actions = db.prepare('SELECT descriptions,points FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ?;').all(id)
+      var actions = db.prepare('SELECT descriptions,points,dates FROM list_actions as la inner join user_actions as ua on la.id=ua.id_a WHERE id_u = ? order by dates DESC;').all(id)
       found.action = actions;
       var count_friends = db.prepare('SELECT COUNT(*) as count FROM friends WHERE id_u = ?').get(id);
       found.count_friends = count_friends.count; 
@@ -192,7 +199,7 @@ exports.read = (id,dateChallenge) => {
   }
 
   exports.addUserActions = (idA,idU,dateChallenge) => {
-    // try{
+    try{
       var date =  new Date();
       var month = date.getMonth()*1+1
       var date1 = date.getDate() + "/" + month + "/" + date.getFullYear()
@@ -211,11 +218,16 @@ exports.read = (id,dateChallenge) => {
       }
       return id;
    
+  }catch{
+    console.log(new Error().stack)
+      return -1
   }
+}
 
   exports.addAction = (description, point) => {
     try{
-      var action = db.prepare('INSERT INTO list_actions (descriptions, points) VALUES (?, ?)').run(description, point)
+      db.prepare('INSERT INTO list_actions (descriptions, points) VALUES (?, ?)').run(description, point)
+      var action = db.prepare('SELECT * FROM list_actions WHERE descriptions = ? and points = ?').get(description, point)      
       return action;
     }
     catch{
