@@ -1,0 +1,15 @@
+{
+    "name":"Projet_WEB",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "author": "Vincent_Yvan",
+    "licence": "ISC",
+    "dependencies": {
+        
+    },
+    "scripts": {
+        "start": "node server.js"
+    }
+
+}
