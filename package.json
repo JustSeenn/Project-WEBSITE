@@ -21,7 +21,7 @@
 
     },
     "scripts": {
-        "start":"node server.js"
+        "start":"node server"
     },
     "stack": "heroku-20"
 
